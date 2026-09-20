@@ -14,8 +14,13 @@ bevat op dit moment alleen de mapstructuur daarvoor.
 | Teksten | nog niet aangeleverd |
 | Foto's | nog niet aangeleverd |
 | Astro-project (code) | nog niet opgezet |
-| Repository op GitHub | nog niet aangemaakt |
-| DNS naar GitHub Pages | nog niet omgezet |
+| Repository op GitHub | ✅ https://github.com/robreim/northernhouse |
+| DNS naar GitHub Pages | ✅ omgezet, gecontroleerd via `dig` |
+| Pages-site + custom domein | ✅ gekoppeld |
+| HTTPS-certificaat | ✅ goedgekeurd (dekt apex én www) |
+| Enforce HTTPS | nog aanzetten |
+| Workflowbestand | nog niet aanwezig — dus nog geen deploy |
+| Domeinverificatie (TXT) | nog niet gedaan; beveiliging, geen voorwaarde |
 
 ## Structuur
 
@@ -131,14 +136,43 @@ Astro kopieert alles uit `public/` naar `dist/`, dus dit bestand komt
 automatisch in de gepubliceerde output. Zonder dit bestand vergeet GitHub
 Pages het eigen domein bij elke deploy.
 
-### 4. Eigen domein koppelen
+### 4. Eigen domein koppelen ✅ gedaan
 
-**Settings → Pages → Custom domain** → `northernhouse.nl` → **Save**. GitHub
-vraagt om het domein te verifiëren met een TXT-record; voeg dat toe bij
-mijndomein (zie hieronder) en klik op **Verify**.
+**Settings → Pages → Custom domain** → `northernhouse.nl` → **Save**.
 
-Wacht daarna tot het HTTPS-certificaat is uitgegeven (meestal minuten, soms
-tot 24 uur) en zet dan **Enforce HTTPS** aan.
+Dit is al gebeurd: de Pages-site bestaat, het custom domein staat op
+`northernhouse.nl`, en het HTTPS-certificaat is goedgekeurd. Zet in dezelfde
+sectie nog **Enforce HTTPS** aan.
+
+Let op: dit is **iets anders** dan domeinverificatie. Verificatie zit *niet*
+hier, maar op profielniveau — zie hieronder.
+
+### 4b. Domein verifiëren (apart, op profielniveau)
+
+Verificatie staat **niet** in de repo-instellingen. GitHub zegt letterlijk:
+"Domain verification happens at the profile level" en "Domain verification
+doesn't take place in repository settings." Daarom is er in **Settings →
+Pages** van de repo geen TXT-record te zien.
+
+Waar wel:
+
+1. Ga naar **https://github.com/settings/pages**
+   (of: profielfoto → **Settings** → in de zijbalk onder "Code, planning and
+   automation" → **Pages**).
+2. Klik op **Add a domain**.
+3. Vul `northernhouse.nl` in → **Add domain**.
+4. Nu verschijnt het TXT-record: naam
+   `_github-pages-challenge-robreim.northernhouse.nl` met een lange
+   hexadecimale waarde. Neem die **exact** over bij mijndomein.
+5. Wachten (direct tot 24 uur), dan op **Verify** klikken.
+
+Waarom dit los staat: verificatie voorkomt dat iemand anders jouw domein aan
+*zijn* GitHub-account koppelt en er een eigen site op publiceert. Het is
+beveiliging, **geen voorwaarde** voor het werken van de site. Laat het
+TXT-record daarna staan, anders vervalt de verificatie.
+
+Bij een organisatie-account is de recordnaam
+`_github-pages-challenge-<organisatie>` in plaats van `-robreim`.
 
 ### 5. DNS omzetten bij mijndomein.nl
 
@@ -170,15 +204,15 @@ Gewenste situatie:
 | AAAA | `@` | `2606:50c0:8002::153` | 300 |
 | AAAA | `@` | `2606:50c0:8003::153` | 300 |
 | CNAME | `www` | `robreim.github.io` | 300 |
-| TXT | `_github-pages-challenge-robreim` | *waarde uit het GitHub-verificatiescherm* | 300 |
+| TXT | `_github-pages-challenge-robreim` | *waarde uit https://github.com/settings/pages* | 300 |
 
 Let op:
 
 - De CNAME voor `www` wijst naar `robreim.github.io`, **zonder** repositorynaam
   erachter.
 - Alle vier de A-records en alle vier de AAAA-records toevoegen, niet één.
-- Zet de TTL een dag vóór de omzetting al op 300 seconden, dan is de
-  overgang snel.
+- Zet de TTL vóór een volgende omzetting een dag vooraf op 300 seconden, dan
+  is de overgang snel.
 - Zet je het CNAME-record voor `www` neer terwijl daar nog A-records staan,
   dan werkt het niet: eerst de oude `www`-records verwijderen.
 
@@ -205,6 +239,9 @@ domein tegen misbruik en zijn zo weer bruikbaar.
 ## Nog te doen
 
 - [ ] Astro-project opzetten (config, Tailwind, layout, componenten)
+- [ ] Workflowbestand toevoegen (zonder `package.json` kan de build niet lopen)
+- [ ] **Enforce HTTPS** aanzetten in Settings → Pages
+- [ ] Domein verifiëren via https://github.com/settings/pages (beveiliging)
 - [ ] Teksten aanleveren in `texts/` en verwerken
 - [ ] Foto's aanleveren in `assets/` en verwerken
 - [ ] Content collections voor projecten opzetten
