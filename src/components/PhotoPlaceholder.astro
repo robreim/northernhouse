@@ -1,0 +1,28 @@
+---
+/**
+ * Tijdelijke fotoplek. Vervang door <img src={...}> zodra er echte foto's zijn.
+ * `label` vertelt welke foto hier hoort, zodat niets stil vergeten wordt.
+ */
+interface Props {
+  label: string;
+  class?: string;
+  ratio?: string;
+}
+
+const { label, class: className = '', ratio = 'aspect-[4/3]' } = Astro.props;
+---
+
+<div
+  class={`relative flex items-center justify-center overflow-hidden rounded-sm bg-oak-100 ring-1 ring-oak-200 ring-inset ${ratio} ${className}`}
+  role="img"
+  aria-label={`Placeholder: ${label}`}
+>
+  <div
+    class="absolute inset-0 opacity-[0.35]"
+    style="background-image: repeating-linear-gradient(45deg, var(--color-oak-200) 0 12px, transparent 12px 24px);"
+  >
+  </div>
+  <p class="relative max-w-[80%] px-4 text-center text-xs font-medium tracking-wide text-oak-700 uppercase">
+    {label}
+  </p>
+</div>

@@ -1,0 +1,179 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PhotoPlaceholder from '../components/PhotoPlaceholder.astro';
+import { DIENSTEN, PROJECTEN, SITE } from '../config';
+---
+
+<BaseLayout
+  title={`${SITE.naam} — ${SITE.tagline}`}
+  description={SITE.beschrijving}
+>
+  <Header />
+
+  <main id="top">
+    <!-- Hero -->
+    <section class="mx-auto max-w-6xl px-6 pt-14 pb-20 md:pt-20">
+      <div class="grid items-center gap-12 md:grid-cols-2">
+        <div>
+          <p class="text-xs tracking-[0.2em] text-oak-600 uppercase">
+            {SITE.tagline}
+          </p>
+          <h1 class="mt-5 font-serif text-4xl leading-[1.1] text-balance text-bark-900 sm:text-5xl md:text-6xl">
+            [Kop: waar het bedrijf voor staat in één krachtige zin]
+          </h1>
+          <p class="mt-6 max-w-lg text-lg leading-relaxed text-oak-800">
+            [Inleidende alinea van twee tot drie zinnen: wat u maakt, voor wie, en
+            wat het vakmanschap onderscheidt.]
+          </p>
+
+          <div class="mt-9 flex flex-wrap items-center gap-4">
+            <a
+              href="#contact"
+              class="bg-oak-700 px-6 py-3 text-sm text-oak-50 transition-colors hover:bg-oak-800"
+            >
+              Neem contact op
+            </a>
+            <a
+              href="#projecten"
+              class="border border-oak-300 px-6 py-3 text-sm text-bark-900 transition-colors hover:bg-oak-100"
+            >
+              Bekijk projecten
+            </a>
+          </div>
+        </div>
+
+        <PhotoPlaceholder
+          label="Hoofdfoto — sfeerbeeld van het werk of de werkplaats"
+          ratio="aspect-[4/5]"
+        />
+      </div>
+    </section>
+
+    <!-- Projecten -->
+    <section id="projecten" class="border-y border-oak-200 bg-white">
+      <div class="mx-auto max-w-6xl px-6 py-20">
+        <header class="max-w-2xl">
+          <h2 class="font-serif text-3xl text-bark-900 sm:text-4xl">Projecten</h2>
+          <p class="mt-4 text-oak-800">
+            [Korte intro boven de galerij. Bijvoorbeeld: elk project is uniek,
+            omdat elke ruimte en elke klant dat is.]
+          </p>
+        </header>
+
+        <ul class="mt-12 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+          {
+            PROJECTEN.map((project) => (
+              <li>
+                <PhotoPlaceholder label={`Foto — ${project.label}`} />
+                <div class="mt-4 flex items-baseline justify-between gap-4">
+                  <h3 class="font-serif text-lg text-bark-900">{project.label}</h3>
+                  <span class="text-xs text-oak-600">{project.jaar}</span>
+                </div>
+                <p class="mt-1 text-sm text-oak-800">{project.tekst}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <!-- Diensten -->
+    <section id="diensten">
+      <div class="mx-auto max-w-6xl px-6 py-20">
+        <header class="max-w-2xl">
+          <h2 class="font-serif text-3xl text-bark-900 sm:text-4xl">Diensten</h2>
+          <p class="mt-4 text-oak-800">
+            [Korte intro: welke soorten werk u aanneemt, en waarvoor klanten bij u
+            terechtkomen.]
+          </p>
+        </header>
+
+        <ul class="mt-12 grid gap-10 sm:grid-cols-2">
+          {
+            DIENSTEN.map((dienst) => (
+              <li class="grid gap-6 sm:grid-cols-[1fr_1.2fr] sm:items-start">
+                <PhotoPlaceholder label={dienst.foto} ratio="aspect-square" />
+                <div>
+                  <h3 class="font-serif text-xl text-bark-900">{dienst.titel}</h3>
+                  <p class="mt-2 text-sm leading-relaxed text-oak-800">
+                    {dienst.tekst}
+                  </p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <!-- Over -->
+    <section id="over" class="border-y border-oak-200 bg-oak-100">
+      <div class="mx-auto grid max-w-6xl items-center gap-12 px-6 py-20 md:grid-cols-2">
+        <PhotoPlaceholder
+          label="Foto — portret van de vakman aan het werk"
+          ratio="aspect-[4/5]"
+        />
+        <div>
+          <h2 class="font-serif text-3xl text-bark-900 sm:text-4xl">Over</h2>
+          <p class="mt-5 leading-relaxed text-oak-800">
+            [Verhaal over het bedrijf: hoe het begon, welke ervaring erachter zit,
+            en wat de werkwijze kenmerkt. Twee tot drie alinea's.]
+          </p>
+          <p class="mt-4 leading-relaxed text-oak-800">
+            [Tweede alinea — bijvoorbeeld over materiaalkeuze, oude technieken, of
+            de manier van samenwerken met de klant.]
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact">
+      <div class="mx-auto grid max-w-6xl gap-12 px-6 py-20 md:grid-cols-2">
+        <div>
+          <h2 class="font-serif text-3xl text-bark-900 sm:text-4xl">Contact</h2>
+          <p class="mt-4 text-oak-800">
+            [Korte uitnodiging: bel of mail vrijblijvend om uw idee of project te
+            bespreken. Neem gerust foto's of tekeningen mee.]
+          </p>
+
+          <dl class="mt-9 space-y-5 text-sm">
+            <div>
+              <dt class="text-xs tracking-widest text-oak-600 uppercase">Telefoon</dt>
+              <dd class="mt-1">
+                <a href={SITE.telefoonHref} class="text-lg text-bark-900 hover:text-oak-600">
+                  {SITE.telefoon}
+                </a>
+              </dd>
+            </div>
+            <div>
+              <dt class="text-xs tracking-widest text-oak-600 uppercase">E-mail</dt>
+              <dd class="mt-1">
+                <a
+                  href={`mailto:${SITE.email}`}
+                  class="text-lg text-bark-900 hover:text-oak-600"
+                >
+                  {SITE.email}
+                </a>
+              </dd>
+            </div>
+            <div>
+              <dt class="text-xs tracking-widest text-oak-600 uppercase">Werkgebied</dt>
+              <dd class="mt-1 text-oak-800">{SITE.regio}</dd>
+            </div>
+          </dl>
+        </div>
+
+        <PhotoPlaceholder
+          label="Foto — werkplaats, gereedschap of detailopname"
+          ratio="aspect-[4/3]"
+          class="self-center"
+        />
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>

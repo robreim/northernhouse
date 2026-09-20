@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+/* Eiken/warm hout als accent, gebroken wit als basis. */
+@theme {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-serif: ui-serif, Georgia, "Times New Roman", serif;
+
+  --color-oak-50: #fbf8f4;
+  --color-oak-100: #f5efe6;
+  --color-oak-200: #e8dcc9;
+  --color-oak-300: #d6c1a2;
+  --color-oak-400: #be9f75;
+  --color-oak-500: #a6845a;
+  --color-oak-600: #8a6b46;
+  --color-oak-700: #6e5437;
+  --color-oak-800: #55412c;
+  --color-oak-900: #3d2f21;
+
+  --color-bark-800: #292524;
+  --color-bark-900: #1c1917;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Ruimte boven ankers zodat de sticky header de kop niet afdekt. */
+[id] {
+  scroll-margin-top: 5rem;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}

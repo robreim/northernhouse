@@ -1,0 +1,44 @@
+---
+import { NAV, SITE } from '../config';
+---
+
+<header class="sticky top-0 z-40 border-b border-oak-200 bg-oak-50/90 backdrop-blur">
+  <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-6 py-4">
+    <a href="#top" class="leading-tight">
+      <span class="block font-serif text-lg tracking-tight text-bark-900">{SITE.naam}</span>
+      <span class="block text-[0.7rem] tracking-widest text-oak-600 uppercase">
+        {SITE.tagline}
+      </span>
+    </a>
+
+    {/* Op mobiel klapt de navigatie naar een eigen rij onder de kop. */}
+    <nav
+      aria-label="Hoofdmenu"
+      class="order-last w-full border-t border-oak-200 pt-3 md:order-none md:w-auto md:border-0 md:pt-0"
+    >
+      <ul class="flex flex-wrap items-center gap-x-6 gap-y-2 md:gap-8">
+        {
+          NAV.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class="text-sm text-bark-800 transition-colors hover:text-oak-600"
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <a
+      href={SITE.telefoonHref}
+      class="ml-auto border border-oak-300 px-4 py-2 text-sm whitespace-nowrap text-bark-900 transition-colors hover:bg-oak-100"
+    >
+      {SITE.telefoon}
+    </a>
+
+
+  </div>
+</header>
