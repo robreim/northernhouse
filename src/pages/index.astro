@@ -2,9 +2,10 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import PhotoPlaceholder from '../components/PhotoPlaceholder.astro';
+import Photo from '../components/Photo.astro';
 import ContactForm from '../components/ContactForm.astro';
 import { DIENSTEN, PROJECTEN, SITE } from '../config';
+import { foto } from '../images';
 ---
 
 <BaseLayout
@@ -22,11 +23,12 @@ import { DIENSTEN, PROJECTEN, SITE } from '../config';
             {SITE.tagline}
           </p>
           <h1 class="mt-5 font-serif text-4xl leading-[1.1] text-balance text-bark-900 sm:text-5xl md:text-6xl">
-            [Kop: waar het bedrijf voor staat in één krachtige zin]
+            Houtbouw en restauratietimmerwerk op de Veluwe
           </h1>
           <p class="mt-6 max-w-lg text-lg leading-relaxed text-oak-800">
-            [Inleidende alinea van twee tot drie zinnen: wat u maakt, voor wie, en
-            wat het vakmanschap onderscheidt.]
+            Welkom op de site van Northern House. Wij maken houtbouwconstructies en
+            houten elementen voor gebouwen en buitenplaatsen, en herstellen
+            bestaand houtwerk met respect voor het origineel.
           </p>
 
           <div class="mt-9 flex flex-wrap items-center gap-4">
@@ -45,9 +47,12 @@ import { DIENSTEN, PROJECTEN, SITE } from '../config';
           </div>
         </div>
 
-        <PhotoPlaceholder
-          label="Hoofdfoto — sfeerbeeld van het werk of de werkplaats"
+        <Photo
+          src={foto('site/hero.jpg')}
+          alt="Houten stokken tussen krullen op de werkbank"
           ratio="aspect-[4/5]"
+          sizes="(min-width: 768px) 50vw, 100vw"
+          loading="eager"
         />
       </div>
     </section>
@@ -58,8 +63,7 @@ import { DIENSTEN, PROJECTEN, SITE } from '../config';
         <header class="max-w-2xl">
           <h2 class="font-serif text-3xl text-bark-900 sm:text-4xl">Projecten</h2>
           <p class="mt-4 text-oak-800">
-            [Korte intro boven de galerij. Bijvoorbeeld: elk project is uniek,
-            omdat elke ruimte en elke klant dat is.]
+            Portfoliofoto's van afgeronde projecten. Kies een project voor meer foto's.
           </p>
         </header>
 
@@ -67,12 +71,13 @@ import { DIENSTEN, PROJECTEN, SITE } from '../config';
           {
             PROJECTEN.map((project) => (
               <li>
-                <PhotoPlaceholder label={`Foto — ${project.label}`} />
-                <div class="mt-4 flex items-baseline justify-between gap-4">
-                  <h3 class="font-serif text-lg text-bark-900">{project.label}</h3>
-                  <span class="text-xs text-oak-600">{project.jaar}</span>
-                </div>
-                <p class="mt-1 text-sm text-oak-800">{project.tekst}</p>
+                <a href={`/projecten/${project.slug}`} class="group block">
+                  <Photo src={foto(project.cover)} alt={project.alt} class="transition-opacity group-hover:opacity-90" />
+                  <h3 class="mt-4 font-serif text-lg text-bark-900 group-hover:text-oak-600">
+                    {project.label}
+                  </h3>
+                  <p class="mt-1 text-sm text-oak-800">{project.tekst}</p>
+                </a>
               </li>
             ))
           }
@@ -86,8 +91,7 @@ import { DIENSTEN, PROJECTEN, SITE } from '../config';
         <header class="max-w-2xl">
           <h2 class="font-serif text-3xl text-bark-900 sm:text-4xl">Diensten</h2>
           <p class="mt-4 text-oak-800">
-            [Korte intro: welke soorten werk u aanneemt, en waarvoor klanten bij u
-            terechtkomen.]
+            Van nieuwe houtconstructies tot het herstel van bestaand houtwerk.
           </p>
         </header>
 
@@ -95,7 +99,7 @@ import { DIENSTEN, PROJECTEN, SITE } from '../config';
           {
             DIENSTEN.map((dienst) => (
               <li class="grid gap-6 sm:grid-cols-[1fr_1.2fr] sm:items-start">
-                <PhotoPlaceholder label={dienst.foto} ratio="aspect-square" />
+                <Photo src={foto(dienst.foto)} alt={dienst.alt} ratio="aspect-square" sizes="(min-width: 640px) 25vw, 100vw" />
                 <div>
                   <h3 class="font-serif text-xl text-bark-900">{dienst.titel}</h3>
                   <p class="mt-2 text-sm leading-relaxed text-oak-800">
@@ -112,19 +116,27 @@ import { DIENSTEN, PROJECTEN, SITE } from '../config';
     <!-- Over -->
     <section id="over" class="border-y border-oak-200 bg-oak-100">
       <div class="mx-auto grid max-w-6xl items-center gap-12 px-6 py-20 md:grid-cols-2">
-        <PhotoPlaceholder
-          label="Foto — portret van de vakman aan het werk"
+        <Photo
+          src={foto('site/over.jpg')}
+          alt="Houten balken met houtverbindingen op de werkbank"
           ratio="aspect-[4/5]"
+          sizes="(min-width: 768px) 50vw, 100vw"
         />
         <div>
           <h2 class="font-serif text-3xl text-bark-900 sm:text-4xl">Over</h2>
           <p class="mt-5 leading-relaxed text-oak-800">
-            [Verhaal over het bedrijf: hoe het begon, welke ervaring erachter zit,
-            en wat de werkwijze kenmerkt. Twee tot drie alinea's.]
+            Northern House is een timmerbedrijf voor houtbouw en restauratie. Het
+            werkgebied bestrijkt grofweg de Veluwe.
           </p>
           <p class="mt-4 leading-relaxed text-oak-800">
-            [Tweede alinea — bijvoorbeeld over materiaalkeuze, oude technieken, of
-            de manier van samenwerken met de klant.]
+            Duurzaamheid, milieubewustzijn en historische waarde zijn waarden die bij
+            de uitvoering van het werk passen. Bij restauratie volgen we de
+            restauratieladder en de uitvoeringsrichtlijnen voor monumentenzorg.
+          </p>
+          <p class="mt-6">
+            <a href="/pim" class="border border-oak-300 bg-oak-50 px-6 py-3 text-sm text-bark-900 transition-colors hover:bg-white">
+              Lees meer over Pim, de timmerman
+            </a>
           </p>
         </div>
       </div>
@@ -137,8 +149,8 @@ import { DIENSTEN, PROJECTEN, SITE } from '../config';
           <div>
             <h2 class="font-serif text-3xl text-bark-900 sm:text-4xl">Contact</h2>
             <p class="mt-4 text-oak-800">
-              [Korte uitnodiging: beschrijf vrijblijvend uw idee of project via het
-              formulier. Vertel wat u in gedachten heeft en waar het om gaat.]
+              Wilt u contact opnemen? Dat kan via het formulier. Beschrijf uw idee of
+              project en waar het om gaat.
             </p>
             <p class="mt-4 text-oak-800">
               U krijgt zo snel mogelijk antwoord. Foto's of tekeningen kunt u later

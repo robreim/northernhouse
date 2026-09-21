@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Photo from '../../components/Photo.astro';
+import { PROJECTEN, SITE } from '../../config';
+import { projectFotos } from '../../images';
+
+export function getStaticPaths() {
+  return PROJECTEN.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
+const { project } = Astro.props;
+const fotos = projectFotos(project.slug);
+---
+
+<BaseLayout title={`${project.label} — ${SITE.naam}`} description={project.tekst}>
+  <Header />
+
+  <main class="mx-auto max-w-6xl px-6 pt-14 pb-10 md:pt-20">
+    <a href="/#projecten" class="text-sm text-oak-600 hover:text-oak-800">← Alle projecten</a>
+    <h1 class="mt-6 font-serif text-4xl text-bark-900 sm:text-5xl">{project.label}</h1>
+    <p class="mt-4 max-w-2xl text-lg leading-relaxed text-oak-800">{project.tekst}</p>
+
+    <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        fotos.map((f, i) => (
+          <li>
+            <Photo src={f} alt={`${project.label}, foto ${i + 1}`} ratio="aspect-[4/3]" />
+          </li>
+        ))
+      }
+    </ul>
+
+    <a
+      href="/#contact"
+      class="mt-14 inline-block bg-oak-700 px-6 py-3 text-sm text-oak-50 transition-colors hover:bg-oak-800"
+    >
+      Neem contact op
+    </a>
+  </main>
+
+  <Footer />
+</BaseLayout>

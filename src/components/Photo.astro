@@ -1,0 +1,32 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  class?: string;
+  ratio?: string;
+  sizes?: string;
+  loading?: 'lazy' | 'eager';
+}
+
+const {
+  src,
+  alt,
+  class: className = '',
+  ratio = 'aspect-[4/3]',
+  sizes = '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw',
+  loading = 'lazy',
+} = Astro.props;
+---
+
+<div class={`overflow-hidden rounded-sm bg-oak-100 ring-1 ring-oak-200 ring-inset ${ratio} ${className}`}>
+  <Image
+    src={src}
+    alt={alt}
+    widths={[480, 960, 1440]}
+    sizes={sizes}
+    loading={loading}
+    class="h-full w-full object-cover"
+  />
+</div>

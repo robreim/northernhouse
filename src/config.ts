@@ -1,13 +1,13 @@
 /**
  * Sitebrede gegevens. Pas hier aan; de rest van de site leest het hier vandaan.
- * Alles met [ ] erin is een placeholder.
+ * Foto's staan in `src/assets/`; hier verwijzen we er met een pad naartoe.
  */
 export const SITE = {
   naam: 'Northern House',
   tagline: 'Timmerman & houtbewerking',
   beschrijving:
-    '[Korte omschrijving van het bedrijf in één zin — verschijnt in Google en bij delen.]',
-  regio: '[werkgebied, bijv. regio Northern House]',
+    'Northern House maakt houtbouwconstructies en houten elementen voor gebouwen en buitenplaatsen, en verzorgt restauratietimmerwerk op de Veluwe.',
+  regio: 'Grofweg de Veluwe',
 } as const;
 
 /**
@@ -17,45 +17,84 @@ export const SITE = {
  */
 export const FORM_ACCESS_KEY = '[web3forms-access-key]';
 
+/** Ankers beginnen met `/` zodat ze ook vanaf andere pagina's werken. */
 export const NAV = [
-  { href: '#projecten', label: 'Projecten' },
-  { href: '#diensten', label: 'Diensten' },
-  { href: '#over', label: 'Over' },
+  { href: '/#projecten', label: 'Projecten' },
+  { href: '/#diensten', label: 'Diensten' },
+  { href: '/#over', label: 'Over' },
+  { href: '/pim', label: 'Over Pim' },
 ] as const;
 
 export const DIENSTEN = [
   {
-    titel: '[Dienst 1]',
+    titel: 'Houtbouwconstructies',
     tekst:
-      '[Beschrijf deze dienst in twee tot drie zinnen. Wat u doet, voor wie, en wat de klant ervan merkt.]',
-    foto: 'Foto dienst 1',
+      "Constructies van hout voor gebouwen en buitenplaatsen, zoals overkappingen en pergola's, met traditionele houtverbindingen.",
+    foto: 'projecten/overkapping/02.jpg',
+    alt: 'Houten hoekverbinding van een overkapping met pen-en-gatverbindingen',
   },
   {
-    titel: '[Dienst 2]',
-    tekst: '[Beschrijf deze dienst in twee tot drie zinnen.]',
-    foto: 'Foto dienst 2',
+    titel: 'Houten elementen',
+    tekst:
+      "Houten elementen voor gebouwen en buitenplaatsen, zoals schuttingen, poorten en pergola's, gemaakt voor de plek waar ze komen.",
+    foto: 'projecten/pergola/04.jpg',
+    alt: 'Hoekverbinding van een houten pergola tegen een blauwe lucht',
   },
   {
-    titel: '[Dienst 3]',
-    tekst: '[Beschrijf deze dienst in twee tot drie zinnen.]',
-    foto: 'Foto dienst 3',
+    titel: 'Restauratietimmerwerk',
+    tekst:
+      'Bij restauratietimmerwerk volgen we de restauratieladder en de uitvoeringsrichtlijnen voor monumentenzorg.',
+    foto: 'projecten/houtrotreparatie/02.jpg',
+    alt: 'Hersteld stuk hout onder een kozijn',
   },
   {
-    titel: '[Dienst 4]',
-    tekst: '[Beschrijf deze dienst in twee tot drie zinnen.]',
-    foto: 'Foto dienst 4',
+    titel: 'Houtrotreparatie en vernieuwen',
+    tekst:
+      'Houtrotreparatie en het vernieuwen van raamluiken, deuren en houten (constructie)delen, zodat wat goed is behouden blijft.',
+    foto: 'projecten/vensterluik/01.jpg',
+    alt: 'Raamluik met rood-wit motief naast een raam',
   },
 ] as const;
 
 /**
- * Projecten zijn nog niet bekend, dus 6 lege plekken met voorbeeldlabels.
- * Vervang label + tekst, en later `foto` door het echte beeld.
+ * Projecten per type werk. De foto's staan in `src/assets/projecten/<slug>/`;
+ * elk project krijgt een eigen pagina met alle foto's uit die map.
  */
 export const PROJECTEN = [
-  { label: 'Project 1', tekst: '[omschrijving]', jaar: '[jaar]' },
-  { label: 'Project 2', tekst: '[omschrijving]', jaar: '[jaar]' },
-  { label: 'Project 3', tekst: '[omschrijving]', jaar: '[jaar]' },
-  { label: 'Project 4', tekst: '[omschrijving]', jaar: '[jaar]' },
-  { label: 'Project 5', tekst: '[omschrijving]', jaar: '[jaar]' },
-  { label: 'Project 6', tekst: '[omschrijving]', jaar: '[jaar]' },
+  {
+    slug: 'overkapping',
+    label: 'Overkapping',
+    tekst:
+      'Houten overkapping tegen de gevel, met korbeel-schoren en pen-en-gatverbindingen.',
+    cover: 'projecten/overkapping/08.jpg',
+    alt: 'Houten overkapping tegen een baksteengevel met zonnepanelen op het dak',
+  },
+  {
+    slug: 'pergola',
+    label: 'Pergola',
+    tekst: 'Pergola als hoekconstructie in de tuin, met klimplanten tegen de schutting.',
+    cover: 'projecten/pergola/01.jpg',
+    alt: 'Houten pergola in een tuinhoek met bankje',
+  },
+  {
+    slug: 'schutting',
+    label: 'Schutting en poort',
+    tekst: 'Zwart geschilderde schutting met bijpassende poort.',
+    cover: 'projecten/schutting/02.jpg',
+    alt: 'Zwarte houten poort naast een bakstenen muur',
+  },
+  {
+    slug: 'vensterluik',
+    label: 'Raamluiken',
+    tekst: 'Raamluiken met een klassiek rood-wit motief.',
+    cover: 'projecten/vensterluik/02.jpg',
+    alt: 'Raam met twee luiken met rood-wit motief in een bakstenen gevel',
+  },
+  {
+    slug: 'houtrotreparatie',
+    label: 'Houtrotreparatie',
+    tekst: 'Houtrot in een kozijn hersteld: het aangetaste hout is vervangen.',
+    cover: 'projecten/houtrotreparatie/01.jpg',
+    alt: 'Raamkozijn met een hersteld stuk hout onderin',
+  },
 ] as const;
