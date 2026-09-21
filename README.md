@@ -3,23 +3,26 @@
 Website voor een Nederlands timmer- en houtbewerkingsbedrijf. Statische site,
 gehost op GitHub Pages, bereikbaar op **https://northernhouse.nl**.
 
-De teksten en foto's zijn Nederlandstalig en nog niet aangeleverd; deze repo
-bevat op dit moment alleen de mapstructuur daarvoor.
+De site staat live. De teksten en foto's zijn nog niet aangeleverd: overal
+staan placeholders tussen `[ ]`, en de fotoplekken zijn zichtbaar gearceerde
+vlakken met een label dat zegt welke foto er hoort.
 
 ## Status
 
 | Onderdeel | Status |
 | --- | --- |
-| Structuur (`assets/`, `texts/`) | aanwezig |
-| Teksten | nog niet aangeleverd |
-| Foto's | nog niet aangeleverd |
-| Astro-project (code) | nog niet opgezet |
+| Structuur (`assets/`, `texts/`) | aanwezig (nog leeg) |
+| Teksten | placeholders in `src/config.ts` en `index.astro` |
+| Foto's | placeholders via `PhotoPlaceholder` |
+| Astro-project (code) | ✅ opgezet |
+| Contactformulier | ✅ werkt, wacht op de Web3Forms key |
 | Repository op GitHub | ✅ https://github.com/robreim/northernhouse |
 | DNS naar GitHub Pages | ✅ omgezet, gecontroleerd via `dig` |
 | Pages-site + custom domein | ✅ gekoppeld |
 | HTTPS-certificaat | ✅ goedgekeurd (dekt apex én www) |
-| Enforce HTTPS | nog aanzetten |
-| Workflowbestand | nog niet aanwezig — dus nog geen deploy |
+| Enforce HTTPS | ✅ aan |
+| Workflowbestand | ✅ `.github/workflows/deploy.yml`, deployt bij push naar `main` |
+| Live | ✅ https://northernhouse.nl (200), `www` en `http` redirecten |
 | Domeinverificatie (TXT) | nog niet gedaan; beveiliging, geen voorwaarde |
 
 ## Structuur
@@ -30,10 +33,11 @@ assets/other/     overige beelden (hero, portret, detail, logo)
 texts/            Nederlandstalige copy, één bestand per pagina/sectie
 ```
 
-Zodra het Astro-project staat, verhuizen `assets/` en `texts/` naar de
+Zodra er echte content is, verhuizen `assets/` en `texts/` naar de
 gebruikelijke plekken (`src/assets/`, `src/content/`) en wordt de inhoud via
 content collections ingelezen: één markdownbestand per project, zodat een
-project toevoegen één bestand toevoegen is.
+project toevoegen één bestand toevoegen is. Voor zes projecten is dat nu nog
+overkill; vandaar dat ze in `src/config.ts` staan.
 
 ## Uitgangspunten
 
@@ -49,14 +53,15 @@ project toevoegen één bestand toevoegen is.
   per categorie) en
   [derestauratietimmerman.nl](https://www.derestauratietimmerman.nl/) (ambacht,
   restauratie, verhalende fotografie).
-- **Contact:** telefoon en e-mail als `tel:`/`mailto:` links. Een echt
-  formulier vereist een externe dienst en is voor v1 niet nodig.
+- **Contact:** géén telefoonnummer, e-mailadres, KVK- of btw-nummer op de
+  site. Bezoekers gebruiken het contactformulier (Web3Forms). Zie de sectie
+  [Contactformulier](#contactformulier).
 
 ## Development
 
 ```bash
 npm install
-npm run dev      # http://localhost:4321
+npm run dev      # http://localhost:4321 (wijkt af als het poortnummer bezet is)
 npm run build    # statische output in dist/
 npm run preview  # productiebuild lokaal bekijken
 ```
@@ -236,15 +241,53 @@ mailserver van die dienst — niet op het hoofddomein, want dat A-record wijst
 naar GitHub Pages. Laat de SPF- en DMARC-TXT-records staan; die beschermen het
 domein tegen misbruik en zijn zo weer bruikbaar.
 
+## Contactformulier
+
+Het formulier post naar Web3Forms, dat het bericht doorstuurt naar het
+e-mailadres dat bij de access key hoort. Geen eigen backend nodig, en het
+adres staat nergens in de HTML.
+
+### Verplicht invullen
+
+In `src/config.ts` staat nog een placeholder:
+
+```ts
+export const FORM_ACCESS_KEY = '[web3forms-access-key]';
+```
+
+**Zolang die placeholder er staat, komt er geen enkel bericht aan.** Web3Forms
+geeft een fout terug en de bezoeker ziet "Versturen lukte niet. Probeer het
+later nog eens." Het formulier lijkt dan te werken, maar er verdwijnt een
+bericht. Vraag een key aan op https://web3forms.com met het adres waar de
+berichten naartoe moeten, en plak hem hier.
+
+### Hoe het werkt
+
+- `src/components/ContactForm.astro` — het formulier zelf, met een
+  spamblok-veld (`botcheck`) dat voor mensen onzichtbaar is.
+- Werkt **zonder JavaScript**: gewone POST, waarna de bezoeker op `/bedankt`
+  landt (`src/pages/bedankt.astro`). Met JavaScript blijft hij op de pagina en
+  ziet de status inline.
+- De key is bedoeld om publiek te zijn: hij bepaalt alleen waar het bericht
+  heen gaat. Niet in een env var stoppen, dan werkt de statische build niet.
+- Gratis tot 250 berichten per maand.
+
+### Let op: wettelijke informatieplicht
+
+De ACM noemt een **e-mailadres en telefoonnummer** verplichte gegevens op een
+bedrijfswebsite (art. 3:15d BW), en noemt een contactformulier **niet** als
+geldig alternatief. Verkoop of lever je diensten via internet, dan komen
+**KVK-nummer en btw-id** er ook bij. Een colofon op `/colofon` — niet gelinkt
+in menu of footer, op `noindex` — is de gangbare oplossing. Nog niet gedaan.
+
 ## Nog te doen
 
-- [ ] Astro-project opzetten (config, Tailwind, layout, componenten)
-- [ ] Workflowbestand toevoegen (zonder `package.json` kan de build niet lopen)
-- [ ] **Enforce HTTPS** aanzetten in Settings → Pages
-- [ ] Domein verifiëren via https://github.com/settings/pages (beveiliging)
+- [ ] **Web3Forms access key invullen** in `src/config.ts` (zie hierboven)
 - [ ] Teksten aanleveren in `texts/` en verwerken
 - [ ] Foto's aanleveren in `assets/` en verwerken
-- [ ] Content collections voor projecten opzetten
-- [ ] Favicon en social-preview-afbeelding (og:image) toevoegen
-- [ ] `robots.txt` + sitemap
-- [ ] Repo aanmaken, Pages aanzetten, DNS omzetten
+- [ ] Overwegen: colofon op `/colofon` wegens de wettelijke informatieplicht
+- [ ] Domein verifiëren via https://github.com/settings/pages (beveiliging)
+- [ ] Social-preview-afbeelding (og:image) toevoegen
+- [ ] Favicon vervangen door het echte logo
+- [ ] Content collections voor projecten opzetten (pas nodig bij groei)
+- [ ] `@astrojs/sitemap` toevoegen zodra er meerdere pagina's zijn
