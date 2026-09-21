@@ -1,0 +1,153 @@
+---
+import { FORM_ACCESS_KEY } from '../config';
+
+/**
+ * Contactformulier via Web3Forms. Geen eigen backend nodig: het formulier
+ * post naar Web3Forms, die het bericht doorstuurt naar het e-mailadres dat
+ * bij de access key hoort. De key mag publiek in de HTML staan.
+ *
+ * Werkt zonder JavaScript (gewone POST + redirect). Het scriptje eronder
+ * doet hetzelfde zonder de pagina te verlaten; zonder JS valt het netjes
+ * terug op de redirect.
+ */
+interface Props {
+  /** Waar de gebruiker naartoe gaat als JavaScript uit staat. */
+  redirectTo?: string;
+}
+
+const { redirectTo = '/bedankt' } = Astro.props;
+
+const velden =
+  'w-full border border-oak-300 bg-white px-4 py-3 text-sm text-bark-900 placeholder:text-oak-400 focus:border-oak-500 focus:outline-none';
+const label = 'block text-xs tracking-widest text-oak-600 uppercase';
+---
+
+<form
+  id="contactformulier"
+  action="https://api.web3forms.com/submit"
+  method="POST"
+  class="space-y-5"
+>
+  <input type="hidden" name="access_key" value={FORM_ACCESS_KEY} />
+  <input type="hidden" name="subject" value="Nieuw bericht via northernhouse.nl" />
+  <input type="hidden" name="from_name" value="Website Northern House" />
+  <input type="hidden" name="redirect" value={redirectTo} />
+
+  <!-- Spamblok: voor mensen onzichtbaar, bots vullen hem in. -->
+  <input
+    type="checkbox"
+    name="botcheck"
+    class="hidden"
+    style="display: none;"
+    tabindex="-1"
+    autocomplete="off"
+    aria-hidden="true"
+  />
+
+  <div class="grid gap-5 sm:grid-cols-2">
+    <div>
+      <label for="naam" class={label}>Naam</label>
+      <input
+        id="naam"
+        type="text"
+        name="naam"
+        required
+        autocomplete="name"
+        class={`mt-2 ${velden}`}
+        placeholder="Uw naam"
+      />
+    </div>
+
+    <div>
+      <label for="email" class={label}>E-mailadres</label>
+      <input
+        id="email"
+        type="email"
+        name="email"
+        required
+        autocomplete="email"
+        class={`mt-2 ${velden}`}
+        placeholder="uw@emailadres.nl"
+      />
+    </div>
+  </div>
+
+  <div>
+    <label for="telefoon" class={label}>Telefoon <span class="normal-case">(optioneel)</span></label>
+    <input
+      id="telefoon"
+      type="tel"
+      name="telefoon"
+      autocomplete="tel"
+      class={`mt-2 ${velden}`}
+      placeholder="Alleen als u liever gebeld wordt"
+    />
+  </div>
+
+  <div>
+    <label for="bericht" class={label}>Uw bericht</label>
+    <textarea
+      id="bericht"
+      name="bericht"
+      required
+      rows="6"
+      class={`mt-2 ${velden} resize-y`}
+      placeholder="Vertel kort over uw project of vraag. Foto's of tekeningen kunt u later per e-mail sturen."
+    ></textarea>
+  </div>
+
+  <div class="flex flex-wrap items-center gap-4">
+    <button
+      type="submit"
+      class="bg-oak-700 px-6 py-3 text-sm text-oak-50 transition-colors hover:bg-oak-800 disabled:opacity-60"
+    >
+      Verstuur bericht
+    </button>
+    <p id="formulier-status" class="text-sm text-oak-700" role="status" aria-live="polite"></p>
+  </div>
+</form>
+
+<script>
+  // Progressive enhancement: onderschept de POST en toont het resultaat inline.
+  // Zonder JS doet de browser een gewone POST en volgt de redirect.
+  const form = document.getElementById('contactformulier') as HTMLFormElement | null;
+  const status = document.getElementById('formulier-status');
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const knop = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+    const origineel = knop.textContent;
+
+    knop.disabled = true;
+    knop.textContent = 'Versturen…';
+    if (status) status.textContent = '';
+
+    try {
+      const antwoord = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+      });
+      const data = await antwoord.json();
+
+      if (data.success) {
+        form.reset();
+        if (status) {
+          status.textContent = 'Bedankt, uw bericht is verstuurd. Ik neem zo snel mogelijk contact op.';
+          status.className = 'text-sm text-oak-700';
+        }
+      } else {
+        throw new Error(data.message || 'Versturen mislukt');
+      }
+    } catch {
+      if (status) {
+        status.textContent =
+          'Versturen lukte niet. Probeer het later nog eens.';
+        status.className = 'text-sm text-red-700';
+      }
+    } finally {
+      knop.disabled = false;
+      knop.textContent = origineel;
+    }
+  });
+</script>

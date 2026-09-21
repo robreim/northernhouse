@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE } from '../config';
+---
+
+<BaseLayout
+  title={`Bedankt — ${SITE.naam}`}
+  description="Uw bericht is verstuurd."
+>
+  <Header />
+
+  <main class="mx-auto flex min-h-[60vh] max-w-2xl flex-col justify-center px-6 py-20">
+    <h1 class="font-serif text-3xl text-bark-900 sm:text-4xl">Bedankt voor uw bericht</h1>
+    <p class="mt-5 leading-relaxed text-oak-800">
+      Uw bericht is verstuurd. Ik neem zo snel mogelijk contact met u op.
+    </p>
+    <p class="mt-4 leading-relaxed text-oak-800">
+      Wilt u foto's of tekeningen meesturen? Dat kan in een reactie op mijn
+      antwoord.
+    </p>
+    <a
+      href="/"
+      class="mt-9 self-start border border-oak-300 px-6 py-3 text-sm text-bark-900 transition-colors hover:bg-oak-100"
+    >
+      Terug naar de site
+    </a>
+  </main>
+
+  <Footer />
+</BaseLayout>

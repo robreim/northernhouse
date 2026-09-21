@@ -7,20 +7,20 @@ export const SITE = {
   tagline: 'Timmerman & houtbewerking',
   beschrijving:
     '[Korte omschrijving van het bedrijf in één zin — verschijnt in Google en bij delen.]',
-  telefoon: '[telefoonnummer]',
-  telefoonHref: 'tel:+31[telefoonnummer]',
-  email: 'info@northernhouse.nl',
-  plaats: '[plaats]',
   regio: '[werkgebied, bijv. regio Northern House]',
-  kvk: '[KVK-nummer]',
-  btw: '[BTW-nummer]',
 } as const;
+
+/**
+ * Web3Forms access key — vraag hem aan op https://web3forms.com met het
+ * e-mailadres waar de berichten naartoe moeten. De key is bedoeld om publiek
+ * in de HTML te staan; hij bepaalt alleen waar het bericht heen gaat.
+ */
+export const FORM_ACCESS_KEY = '[web3forms-access-key]';
 
 export const NAV = [
   { href: '#projecten', label: 'Projecten' },
   { href: '#diensten', label: 'Diensten' },
   { href: '#over', label: 'Over' },
-  { href: '#contact', label: 'Contact' },
 ] as const;
 
 export const DIENSTEN = [
