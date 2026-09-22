@@ -97,4 +97,11 @@ export const PROJECTEN = [
     cover: 'projecten/houtrotreparatie/01.jpg',
     alt: 'Raamkozijn met een hersteld stuk hout onderin',
   },
+  {
+    slug: 'dakschoorreparatie',
+    label: 'Dakschoorreparatie',
+    tekst: 'Nieuwe dakschoren onder een rieten kap, tegen het bestaande metselwerk gezet.',
+    cover: 'projecten/dakschoorreparatie/01.jpg',
+    alt: 'Nieuwe houten dakschoren onder een rieten dak, met steigermateriaal ervoor',
+  },
 ] as const;
