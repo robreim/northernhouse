@@ -11,7 +11,7 @@ backend:
   name: github
   repo: robreim/northernhouse
   branch: main
-  base_url: https://sveltia-cms-auth.<JOUW-SUBDOMEIN>.workers.dev
+  base_url: northernhouse-sveltia-cms-auth.cloudflare-9dh8y.workers.dev
   # Alleen inloggen via GitHub. De optie "inloggen met een toegangstoken" is
   # voor ontwikkelaars; de beheerder hoeft die niet te zien.
   auth_methods: [oauth]
