@@ -1,0 +1,28 @@
+{
+  "teksten": [
+    {
+      "titel": "Houtbouwconstructies",
+      "tekst": "Constructies van hout voor gebouwen en buitenplaatsen, zoals overkappingen en pergola's, met traditionele houtverbindingen.",
+      "foto": "projecten/overkapping/02.jpg",
+      "alt": "Houten hoekverbinding van een overkapping met pen-en-gatverbindingen"
+    },
+    {
+      "titel": "Houten elementen",
+      "tekst": "Houten elementen voor gebouwen en buitenplaatsen, zoals schuttingen, poorten en pergola's, gemaakt voor de plek waar ze komen.",
+      "foto": "projecten/pergola/04.jpg",
+      "alt": "Hoekverbinding van een houten pergola tegen een blauwe lucht"
+    },
+    {
+      "titel": "Restauratietimmerwerk",
+      "tekst": "Bij restauratietimmerwerk volgen we de restauratieladder en de uitvoeringsrichtlijnen voor monumentenzorg.",
+      "foto": "projecten/houtrotreparatie/02.jpg",
+      "alt": "Hersteld stuk hout onder een kozijn"
+    },
+    {
+      "titel": "Houtrotreparatie en vernieuwen",
+      "tekst": "Houtrotreparatie en het vernieuwen van raamluiken, deuren en houten (constructie)delen, zodat wat goed is behouden blijft.",
+      "foto": "projecten/vensterluik/01.jpg",
+      "alt": "Raamluik met rood-wit motief naast een raam"
+    }
+  ]
+}

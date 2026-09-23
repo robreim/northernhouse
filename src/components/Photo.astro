@@ -1,8 +1,13 @@
 ---
 import { Image } from 'astro:assets';
+import { foto } from '../images';
 
 interface Props {
-  src: ImageMetadata;
+  /**
+   * Pad van de foto, relatief aan `src/assets/` — precies zoals het in
+   * `src/data/*.json` staat (het formulier in `/admin` vult dit veld).
+   */
+  src: string;
   alt: string;
   class?: string;
   ratio?: string;
@@ -11,13 +16,17 @@ interface Props {
 }
 
 const {
-  src,
+  src: pad,
   alt,
   class: className = '',
   ratio = 'aspect-[4/3]',
   sizes = '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw',
   loading = 'lazy',
 } = Astro.props;
+
+// `foto()` zit in `src/images.ts` en gooit een fout met het pad erbij als de
+// foto ontbreekt. Zo faalt de build in plaats van dat er een leeg vak komt.
+const src = foto(pad);
 ---
 
 <div class={`overflow-hidden rounded-sm bg-oak-100 ring-1 ring-oak-200 ring-inset ${ratio} ${className}`}>

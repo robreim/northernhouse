@@ -1,0 +1,18 @@
+{
+  "slug": "vensterluik",
+  "volgorde": 4,
+  "label": "Raamluiken",
+  "tekst": "Raamluiken met een klassiek rood-wit motief.",
+  "cover": "projecten/vensterluik/02.jpg",
+  "alt": "Raam met twee luiken met rood-wit motief in een bakstenen gevel",
+  "fotos": [
+    {
+      "foto": "projecten/vensterluik/01.jpg",
+      "alt": "Raamluiken, foto 1"
+    },
+    {
+      "foto": "projecten/vensterluik/02.jpg",
+      "alt": "Raamluiken, foto 2"
+    }
+  ]
+}

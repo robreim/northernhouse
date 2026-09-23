@@ -1,14 +1,41 @@
 /**
- * Sitebrede gegevens. Pas hier aan; de rest van de site leest het hier vandaan.
- * Foto's staan in `src/assets/`; hier verwijzen we er met een pad naartoe.
+ * Sitebrede gegevens. De inhoud staat in `src/data/` en is te bewerken via
+ * `/admin` (Sveltia CMS). Dit bestand is alleen het doorgeefluik.
  */
-export const SITE = {
-  naam: 'Northern House',
-  tagline: 'Timmerman & houtbewerking',
-  beschrijving:
-    'Northern House maakt houtbouwconstructies en houten elementen voor gebouwen en buitenplaatsen, en verzorgt restauratietimmerwerk op de Veluwe.',
-  regio: 'Grofweg de Veluwe',
-} as const;
+import bedanktData from './data/bedankt.json';
+import dienstenData from './data/diensten.json';
+import homeData from './data/home.json';
+import pimData from './data/pim.json';
+import siteData from './data/site.json';
+
+export const SITE = siteData;
+export const HOME = homeData;
+export const DIENSTEN = dienstenData.teksten;
+export const PIM = pimData;
+export const BEDANKT = bedanktData.teksten;
+
+export interface Project {
+  slug: string;
+  /** Volgorde op de homepage; lager getal staat vooraan. */
+  volgorde: number;
+  label: string;
+  tekst: string;
+  cover: string;
+  alt: string;
+  /** Alle foto's van de projectpagina, in deze volgorde. */
+  fotos: { foto: string; alt: string }[];
+}
+
+// Elk project heeft een eigen bestand in `src/data/projecten/`. De volgorde op
+// de homepage komt uit het veld `volgorde`, niet uit de bestandsnaam.
+const projectBestanden = import.meta.glob<Project>('./data/projecten/*.json', {
+  eager: true,
+  import: 'default',
+});
+
+export const PROJECTEN: Project[] = Object.values(projectBestanden).sort(
+  (a, b) => a.volgorde - b.volgorde
+);
 
 /**
  * Web3Forms access key — vraag hem aan op https://web3forms.com met het
@@ -23,85 +50,4 @@ export const NAV = [
   { href: '/#diensten', label: 'Diensten' },
   { href: '/#over', label: 'Over' },
   { href: '/pim', label: 'Over Pim' },
-] as const;
-
-export const DIENSTEN = [
-  {
-    titel: 'Houtbouwconstructies',
-    tekst:
-      "Constructies van hout voor gebouwen en buitenplaatsen, zoals overkappingen en pergola's, met traditionele houtverbindingen.",
-    foto: 'projecten/overkapping/02.jpg',
-    alt: 'Houten hoekverbinding van een overkapping met pen-en-gatverbindingen',
-  },
-  {
-    titel: 'Houten elementen',
-    tekst:
-      "Houten elementen voor gebouwen en buitenplaatsen, zoals schuttingen, poorten en pergola's, gemaakt voor de plek waar ze komen.",
-    foto: 'projecten/pergola/04.jpg',
-    alt: 'Hoekverbinding van een houten pergola tegen een blauwe lucht',
-  },
-  {
-    titel: 'Restauratietimmerwerk',
-    tekst:
-      'Bij restauratietimmerwerk volgen we de restauratieladder en de uitvoeringsrichtlijnen voor monumentenzorg.',
-    foto: 'projecten/houtrotreparatie/02.jpg',
-    alt: 'Hersteld stuk hout onder een kozijn',
-  },
-  {
-    titel: 'Houtrotreparatie en vernieuwen',
-    tekst:
-      'Houtrotreparatie en het vernieuwen van raamluiken, deuren en houten (constructie)delen, zodat wat goed is behouden blijft.',
-    foto: 'projecten/vensterluik/01.jpg',
-    alt: 'Raamluik met rood-wit motief naast een raam',
-  },
-] as const;
-
-/**
- * Projecten per type werk. De foto's staan in `src/assets/projecten/<slug>/`;
- * elk project krijgt een eigen pagina met alle foto's uit die map.
- */
-export const PROJECTEN = [
-  {
-    slug: 'overkapping',
-    label: 'Overkapping',
-    tekst:
-      'Houten overkapping tegen de gevel, met korbeel-schoren en pen-en-gatverbindingen.',
-    cover: 'projecten/overkapping/08.jpg',
-    alt: 'Houten overkapping tegen een baksteengevel met zonnepanelen op het dak',
-  },
-  {
-    slug: 'pergola',
-    label: 'Pergola',
-    tekst: 'Pergola als hoekconstructie in de tuin, met klimplanten tegen de schutting.',
-    cover: 'projecten/pergola/01.jpg',
-    alt: 'Houten pergola in een tuinhoek met bankje',
-  },
-  {
-    slug: 'schutting',
-    label: 'Schutting en poort',
-    tekst: 'Zwart geschilderde schutting met bijpassende poort.',
-    cover: 'projecten/schutting/02.jpg',
-    alt: 'Zwarte houten poort naast een bakstenen muur',
-  },
-  {
-    slug: 'vensterluik',
-    label: 'Raamluiken',
-    tekst: 'Raamluiken met een klassiek rood-wit motief.',
-    cover: 'projecten/vensterluik/02.jpg',
-    alt: 'Raam met twee luiken met rood-wit motief in een bakstenen gevel',
-  },
-  {
-    slug: 'houtrotreparatie',
-    label: 'Houtrotreparatie',
-    tekst: 'Houtrot in een kozijn hersteld: het aangetaste hout is vervangen.',
-    cover: 'projecten/houtrotreparatie/01.jpg',
-    alt: 'Raamkozijn met een hersteld stuk hout onderin',
-  },
-  {
-    slug: 'dakschoorreparatie',
-    label: 'Dakschoorreparatie',
-    tekst: 'Nieuwe dakschoren onder een rieten kap, tegen het bestaande metselwerk gezet.',
-    cover: 'projecten/dakschoorreparatie/01.jpg',
-    alt: 'Nieuwe houten dakschoren onder een rieten dak, met steigermateriaal ervoor',
-  },
 ] as const;

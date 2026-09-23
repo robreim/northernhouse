@@ -1,0 +1,14 @@
+{
+  "slug": "dakschoorreparatie",
+  "volgorde": 6,
+  "label": "Dakschoorreparatie",
+  "tekst": "Nieuwe dakschoren onder een rieten kap, tegen het bestaande metselwerk gezet.",
+  "cover": "projecten/dakschoorreparatie/01.jpg",
+  "alt": "Nieuwe houten dakschoren onder een rieten dak, met steigermateriaal ervoor",
+  "fotos": [
+    {
+      "foto": "projecten/dakschoorreparatie/01.jpg",
+      "alt": "Dakschoorreparatie, foto 1"
+    }
+  ]
+}

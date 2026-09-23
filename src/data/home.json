@@ -1,0 +1,31 @@
+{
+  "hero": {
+    "kop": "Houtbouw en restauratietimmerwerk op de Veluwe",
+    "intro": "Welkom op de site van Northern House. Wij maken houtbouwconstructies en houten elementen voor gebouwen en buitenplaatsen, en herstellen bestaand houtwerk met respect voor het origineel.",
+    "knop_contact": "Neem contact op",
+    "knop_projecten": "Bekijk projecten",
+    "foto": "site/hero.jpg",
+    "alt": "Houten stokken tussen krullen op de werkbank"
+  },
+  "projecten": {
+    "kop": "Projecten",
+    "intro": "Portfoliofoto's van afgeronde projecten. Kies een project voor meer foto's."
+  },
+  "diensten": {
+    "kop": "Diensten",
+    "intro": "Van nieuwe houtconstructies tot het herstel van bestaand houtwerk."
+  },
+  "over": {
+    "kop": "Over",
+    "tekst1": "Northern House is een timmerbedrijf voor houtbouw en restauratie. Het werkgebied bestrijkt grofweg de Veluwe.",
+    "tekst2": "Duurzaamheid, milieubewustzijn en historische waarde zijn waarden die bij de uitvoering van het werk passen. Bij restauratie volgen we de restauratieladder en de uitvoeringsrichtlijnen voor monumentenzorg.",
+    "knop": "Lees meer over Pim, de timmerman",
+    "foto": "site/over.jpg",
+    "alt": "Houten balken met houtverbindingen op de werkbank"
+  },
+  "contact": {
+    "kop": "Contact",
+    "tekst1": "Wilt u contact opnemen? Dat kan via het formulier. Beschrijf uw idee of project en waar het om gaat.",
+    "tekst2": "U krijgt zo snel mogelijk antwoord. Foto's of tekeningen kunt u later nasturen."
+  }
+}

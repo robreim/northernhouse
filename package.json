@@ -8,7 +8,8 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "node scripts/check-content.mjs && astro build",
+    "check-content": "node scripts/check-content.mjs",
     "preview": "astro preview"
   },
   "dependencies": {
@@ -16,6 +17,7 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
+    "js-yaml": "^4.3.2",
     "tailwindcss": "^4.3.3"
   }
 }

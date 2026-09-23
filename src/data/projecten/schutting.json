@@ -1,0 +1,18 @@
+{
+  "slug": "schutting",
+  "volgorde": 3,
+  "label": "Schutting en poort",
+  "tekst": "Zwart geschilderde schutting met bijpassende poort.",
+  "cover": "projecten/schutting/02.jpg",
+  "alt": "Zwarte houten poort naast een bakstenen muur",
+  "fotos": [
+    {
+      "foto": "projecten/schutting/01.jpg",
+      "alt": "Schutting en poort, foto 1"
+    },
+    {
+      "foto": "projecten/schutting/02.jpg",
+      "alt": "Schutting en poort, foto 2"
+    }
+  ]
+}

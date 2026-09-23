@@ -3,21 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Photo from '../components/Photo.astro';
-import { SITE } from '../config';
-import { foto } from '../images';
-
-const interesses = [
-  { titel: 'Terreinrijden', tekst: 'Met een oude terreinauto over zandpaden en door het bos.' },
-  { titel: 'Vissen', tekst: 'Een rustige dag aan het water.' },
-  { titel: 'Wandelen', tekst: 'Te voet de natuur in, het liefst ver van de bewoonde wereld.' },
-  { titel: 'Buiten zijn', tekst: 'Hout begint in de natuur; daar komt de rust en de inspiratie vandaan.' },
-];
-
-const terreinrijden = [
-  { src: foto('pim/terreinrijden-1.jpg'), alt: 'Zandpad door het bos, gezien vanuit de terreinauto' },
-  { src: foto('pim/terreinrijden-2.jpg'), alt: 'Terreinauto in een houten schuur' },
-  { src: foto('pim/terreinrijden-3.jpg'), alt: 'Bospad met een andere terreinauto voor de auto' },
-];
+import { PIM, SITE } from '../config';
 ---
 
 <BaseLayout
@@ -30,22 +16,20 @@ const terreinrijden = [
     <section class="mx-auto max-w-3xl px-6 pt-14 pb-16 md:pt-20">
       <p class="text-xs tracking-[0.2em] text-oak-600 uppercase">Over Pim</p>
       <h1 class="mt-5 font-serif text-4xl leading-[1.1] text-balance text-bark-900 sm:text-5xl">
-        De timmerman achter Northern House
+        {PIM.teksten.kop}
       </h1>
       <p class="mt-6 text-lg leading-relaxed text-oak-800">
-        Pim is timmerman en houtbewerker. Hij maakt houtbouwconstructies en herstelt
-        bestaand houtwerk op en rond de Veluwe. Buiten het werk is hij het liefst in
-        de natuur.
+        {PIM.teksten.intro}
       </p>
     </section>
 
     <section class="border-y border-oak-200 bg-oak-100">
       <div class="mx-auto max-w-6xl px-6 py-20">
-        <h2 class="font-serif text-3xl text-bark-900 sm:text-4xl">Buiten het werk</h2>
+        <h2 class="font-serif text-3xl text-bark-900 sm:text-4xl">{PIM.teksten.buiten_kop}</h2>
 
         <ul class="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2">
           {
-            interesses.map((i) => (
+            PIM.interesses.map((i) => (
               <li class="border-t border-oak-300 pt-4">
                 <h3 class="font-serif text-xl text-bark-900">{i.titel}</h3>
                 <p class="mt-2 text-sm leading-relaxed text-oak-800">{i.tekst}</p>
@@ -54,12 +38,12 @@ const terreinrijden = [
           }
         </ul>
 
-        <h3 class="mt-16 font-serif text-2xl text-bark-900">Onderweg</h3>
+        <h3 class="mt-16 font-serif text-2xl text-bark-900">{PIM.teksten.onderweg_kop}</h3>
         <ul class="mt-6 grid gap-6 sm:grid-cols-3">
           {
-            terreinrijden.map((f) => (
+            PIM.onderweg.map((f) => (
               <li>
-                <Photo src={f.src} alt={f.alt} ratio="aspect-[3/4]" sizes="(min-width: 640px) 33vw, 100vw" />
+                <Photo src={f.foto} alt={f.alt} ratio="aspect-[3/4]" sizes="(min-width: 640px) 33vw, 100vw" />
               </li>
             ))
           }
@@ -68,16 +52,16 @@ const terreinrijden = [
     </section>
 
     <section class="mx-auto max-w-3xl px-6 py-20">
-      <h2 class="font-serif text-3xl text-bark-900">Werk laten uitvoeren?</h2>
+      <h2 class="font-serif text-3xl text-bark-900">{PIM.teksten.cta_kop}</h2>
       <p class="mt-4 leading-relaxed text-oak-800">
-        Bekijk de projecten of stuur een bericht via het contactformulier.
+        {PIM.teksten.cta_tekst}
       </p>
       <div class="mt-8 flex flex-wrap gap-4">
         <a href="/#contact" class="bg-oak-700 px-6 py-3 text-sm text-oak-50 transition-colors hover:bg-oak-800">
-          Neem contact op
+          {PIM.teksten.cta_contact}
         </a>
         <a href="/#projecten" class="border border-oak-300 px-6 py-3 text-sm text-bark-900 transition-colors hover:bg-oak-100">
-          Bekijk projecten
+          {PIM.teksten.cta_projecten}
         </a>
       </div>
     </section>

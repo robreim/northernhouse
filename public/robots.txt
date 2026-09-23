@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
 
 # AI / LLM training crawlers — blocked, search engines above are unaffected
 User-agent: GPTBot

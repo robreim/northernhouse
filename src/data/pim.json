@@ -1,0 +1,44 @@
+{
+  "teksten": {
+    "kop": "De timmerman achter Northern House",
+    "intro": "Pim is timmerman en houtbewerker. Hij maakt houtbouwconstructies en herstelt bestaand houtwerk op en rond de Veluwe. Buiten het werk is hij het liefst in de natuur.",
+    "buiten_kop": "Buiten het werk",
+    "onderweg_kop": "Onderweg",
+    "cta_kop": "Werk laten uitvoeren?",
+    "cta_tekst": "Bekijk de projecten of stuur een bericht via het contactformulier.",
+    "cta_contact": "Neem contact op",
+    "cta_projecten": "Bekijk projecten"
+  },
+  "onderweg": [
+    {
+      "foto": "pim/terreinrijden-1.jpg",
+      "alt": "Zandpad door het bos, gezien vanuit de terreinauto"
+    },
+    {
+      "foto": "pim/terreinrijden-2.jpg",
+      "alt": "Terreinauto in een houten schuur"
+    },
+    {
+      "foto": "pim/terreinrijden-3.jpg",
+      "alt": "Bospad met een andere terreinauto voor de auto"
+    }
+  ],
+  "interesses": [
+    {
+      "titel": "Terreinrijden",
+      "tekst": "Met een oude terreinauto over zandpaden en door het bos."
+    },
+    {
+      "titel": "Vissen",
+      "tekst": "Een rustige dag aan het water."
+    },
+    {
+      "titel": "Wandelen",
+      "tekst": "Te voet de natuur in, het liefst ver van de bewoonde wereld."
+    },
+    {
+      "titel": "Buiten zijn",
+      "tekst": "Hout begint in de natuur; daar komt de rust en de inspiratie vandaan."
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "slug": "houtrotreparatie",
+  "volgorde": 5,
+  "label": "Houtrotreparatie",
+  "tekst": "Houtrot in een kozijn hersteld: het aangetaste hout is vervangen.",
+  "cover": "projecten/houtrotreparatie/01.jpg",
+  "alt": "Raamkozijn met een hersteld stuk hout onderin",
+  "fotos": [
+    {
+      "foto": "projecten/houtrotreparatie/01.jpg",
+      "alt": "Houtrotreparatie, foto 1"
+    },
+    {
+      "foto": "projecten/houtrotreparatie/02.jpg",
+      "alt": "Houtrotreparatie, foto 2"
+    }
+  ]
+}

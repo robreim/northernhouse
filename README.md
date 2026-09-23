@@ -11,9 +11,11 @@ vlakken met een label dat zegt welke foto er hoort.
 
 | Onderdeel | Status |
 | --- | --- |
-| Structuur (`assets/`, `texts/`) | aanwezig (nog leeg) |
-| Teksten | placeholders in `src/config.ts` en `index.astro` |
-| Foto's | placeholders via `PhotoPlaceholder` |
+| Structuur (`src/data/`, `src/assets/`) | ✅ inhoud staat buiten de code |
+| Teksten | ✅ in `src/data/*.json`, te bewerken via `/admin` |
+| Foto's | ✅ in `src/assets/`, te beheren via `/admin` |
+| Beheerpagina (`/admin`) | ✅ ingericht, wacht op de Cloudflare Worker-URL |
+| Inhoudscontrole vóór builds | ✅ `scripts/check-content.mjs`, draait in `npm run build` |
 | Astro-project (code) | ✅ opgezet |
 | Contactformulier | ✅ werkt, wacht op de Web3Forms key |
 | Repository op GitHub | ✅ https://github.com/robreim/northernhouse |
@@ -28,16 +30,30 @@ vlakken met een label dat zegt welke foto er hoort.
 ## Structuur
 
 ```
-assets/gallery/   projectfoto's (worden de projectgalerij)
-assets/other/     overige beelden (hero, portret, detail, logo)
-texts/            Nederlandstalige copy, één bestand per pagina/sectie
+src/data/                     alle teksten, één JSON-bestand per pagina/sectie
+src/data/projecten/           één bestand per project (tekst + fotolijst)
+src/assets/projecten/<slug>/  foto's per project
+src/assets/site/              hero en de foto bij "Over"
+src/assets/pim/               foto's op de Pim-pagina
+src/config.ts                 leest src/data/ in; hier komt de rest van de code bijeen
+public/admin/                 het beheerformulier (/admin)
+scripts/check-content.mjs     controleert de inhoud vóór het bouwen
 ```
 
-Zodra er echte content is, verhuizen `assets/` en `texts/` naar de
-gebruikelijke plekken (`src/assets/`, `src/content/`) en wordt de inhoud via
-content collections ingelezen: één markdownbestand per project, zodat een
-project toevoegen één bestand toevoegen is. Voor zes projecten is dat nu nog
-overkill; vandaar dat ze in `src/config.ts` staan.
+De inhoud staat bewust **buiten** de code, in `src/data/*.json`, zodat het
+beheerformulier erbij kan zonder Astro-code aan te raken. Een tekst wijzigen
+kan dus ook door het JSON-bestand aan te passen.
+
+Foto's worden niet in de JSON opgeslagen maar erin *genoemd*, als pad vanaf
+`src/assets/` (bijvoorbeeld `projecten/pergola/01.jpg`). Een projectpagina
+toont precies de foto's uit de lijst `fotos` in dat bestand: een foto die daar
+niet in staat, staat ook niet op de site. Dat is wat het mogelijk maakt om via
+het formulier een foto weg te halen, en om per foto een omschrijving en een
+volgorde te bewaren.
+
+`assets/` in de root is een verzameling ruwe originelen die de site niet
+gebruikt en die ook niet in git zitten; die kun je weggooien of bewaren als
+archief. Zie verder [Beheer (/admin)](#beheer-admin).
 
 ## Uitgangspunten
 
@@ -280,14 +296,110 @@ geldig alternatief. Verkoop of lever je diensten via internet, dan komen
 **KVK-nummer en btw-id** er ook bij. Een colofon op `/colofon` — niet gelinkt
 in menu of footer, op `noindex` — is de gangbare oplossing. Nog niet gedaan.
 
+## Beheer (/admin)
+
+Op **https://northernhouse.nl/admin** staat een formulier waarmee de
+beheerder teksten kan wijzigen en foto's kan toevoegen en weghalen. Er is geen
+database en geen server: het formulier schrijft rechtstreeks in de bestanden
+van deze repo, GitHub bouwt de site opnieuw, en binnen ongeveer een minuut staat
+de wijziging live. Zonder op **Opslaan** te drukken verandert er niets.
+
+De beheerder kan alleen de inhoud aanraken — teksten en foto's. De opbouw van
+de pagina's, de vormgeving en de navigatie zitten in de Astro-code en zijn via
+het formulier niet te wijzigen. Dat is bewust: er is geen knop die de site kan
+slopen.
+
+### Eenmalig opzetten (alleen de websitebouwer)
+
+Het formulier gebruikt [Sveltia CMS](https://sveltiacms.app) (MIT, één
+JavaScript-bestand, geen dependency in `package.json`). De login loopt via een
+kleine Cloudflare Worker die de GitHub-login afhandelt.
+
+1. **Worker deployen.** Ga naar
+   https://github.com/sveltia/sveltia-cms-auth en klik op *Deploy to Cloudflare
+   Workers*. (Alternatief: clonen en `wrangler deploy`.)
+2. **Worker-URL noteren**, bijvoorbeeld
+   `https://sveltia-cms-auth.jouwnaam.workers.dev`.
+3. **GitHub OAuth-app registreren** op https://github.com/settings/applications/new:
+   - Application name: `Sveltia CMS Authenticator`
+   - Homepage URL: `https://northernhouse.nl`
+   - Authorization callback URL: `<WORKER-URL>/callback`
+   Klik daarna op *Generate a new client secret*.
+4. **Worker instellen.** Cloudflare → de worker → *Settings* → *Variables*:
+   - `GITHUB_CLIENT_ID` = de Client ID
+   - `GITHUB_CLIENT_SECRET` = de Client Secret (op *Encrypt* klikken)
+   - `ALLOWED_DOMAINS` = `northernhouse.nl, *.northernhouse.nl`, zodat alleen
+     deze site de worker kan gebruiken.
+5. **`base_url` invullen** in `public/admin/config.yml`, bij `backend`:
+
+   ```yaml
+   base_url: https://sveltia-cms-auth.jouwnaam.workers.dev
+   ```
+
+   Nu staat er nog een placeholder met `<JOUW-SUBDOMEIN>`; die moet weg.
+   Committen en pushen, daarna is `/admin` bruikbaar.
+
+### Wat de beheerder ziet
+
+- **Teksten** — Algemeen, Homepage, Diensten, Over Pim, Bedankt.
+- **Projecten** — één blok per project met titel, omschrijving, de foto op de
+  homepage en de fotolijst van dat project. Foto's toevoegen, weghalen en
+  slepen om de volgorde te bepalen.
+- **Fotomappen** (in het foto-venster) — Alle projectfoto's, Algemene foto's,
+  Foto's Over Pim: om een map op te ruimen zonder een projecttekst te openen.
+
+Alle invoervelden zijn in het Nederlands; de opmaak van het formulier komt van
+Sveltia zelf.
+
+### Twee dingen om te weten
+
+- **Foto's worden automatisch verkleind.** Bij het uploaden zet het formulier
+  foto's om naar webp en verkleint ze tot maximaal 2048 px (kwaliteit 82). Dat
+  staat in `config.yml` onder `media_libraries`. Zonder dat loopt de repo vol:
+  een foto van een moderne telefoon is zo 5 MB, en GitHub Pages bouwt elke
+  deploy opnieuw.
+- **De repo is publiek, `/admin` dus ook.** Er staat niets geheims in: alleen de
+  repo-naam en veldnamen. Zonder GitHub-account met schrijftoegang kom je niet
+  verder dan het inlogscherm. `/admin/` staat op `noindex` en in `robots.txt`.
+
+### Als er iets misgaat
+
+- **Wijziging niet zichtbaar?** Kijk bij *Actions* in de repo. Een gebroken
+  build laat de vorige versie van de site staan; de wijziging komt dan niet
+  online. Draai `npm run check-content` voor de reden.
+- **Iets verkeerd aangepast?** Alles is git: `git revert <commit>` of het
+  bestand terughalen uit de geschiedenis. Zeg het tegen de websitebouwer.
+- **Foto per ongeluk weg?** Zelfde: de foto staat nog in de git-geschiedenis.
+- **Formulier helemaal leeg of foutmelding bij inloggen?** Meestal de worker of
+  `base_url`. Test de worker-URL in de browser; die hoort een klein bericht te
+  geven, geen foutpagina.
+- **Formulier mist een veld of een veld doet niets?** Meestal een typefout in
+  `public/admin/config.yml`. `npm run check-content` controleert dat, en in
+  VS Code met de YAML-extensie zie je het al bij het typen (via de
+  schema-regel bovenaan het bestand).
+
+### Een nieuw project toevoegen
+
+Dat is nog een klein klusje voor de websitebouwer, geen knop in het formulier:
+
+1. Maak `src/assets/projecten/<slug>/` aan en zet de foto's erin.
+2. Kopieer een bestaand `src/data/projecten/*.json` naar `<slug>.json` en vul
+   `slug`, `label`, `tekst`, `cover`, `alt`, `volgorde` en de fotolijst in.
+3. Zet in `public/admin/config.yml` onder *Projecten* een blok bij, met
+   `media_folder: /src/assets/projecten/<slug>`. Het makkelijkst is een
+   bestaand blok kopiëren en de naam, het label en het pad aanpassen.
+4. `npm run check-content` — dat script controleert of de bestanden, de foto's
+   en de CMS-blokken bij elkaar passen en zegt precies wat er ontbreekt.
+
 ## Nog te doen
 
 - [ ] **Web3Forms access key invullen** in `src/config.ts` (zie hierboven)
-- [ ] Teksten aanleveren in `texts/` en verwerken
-- [ ] Foto's aanleveren in `assets/` en verwerken
+- [ ] **Beheerformulier activeren:** Cloudflare Worker opzetten en de URL in
+      `public/admin/config.yml` zetten (zie [Beheer (/admin)](#beheer-admin))
+- [ ] Beheerder laten inloggen, samen één foto toevoegen en één weghalen
 - [ ] Overwegen: colofon op `/colofon` wegens de wettelijke informatieplicht
 - [ ] Domein verifiëren via https://github.com/settings/pages (beveiliging)
 - [ ] Social-preview-afbeelding (og:image) toevoegen
 - [ ] Favicon vervangen door het echte logo
-- [ ] Content collections voor projecten opzetten (pas nodig bij groei)
+- [ ] `assets/` in de root bekijken: 62 ongebruikte originelen (73 MB), niet in git
 - [ ] `@astrojs/sitemap` toevoegen zodra er meerdere pagina's zijn

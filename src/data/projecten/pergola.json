@@ -1,0 +1,46 @@
+{
+  "slug": "pergola",
+  "volgorde": 2,
+  "label": "Pergola",
+  "tekst": "Pergola als hoekconstructie in de tuin, met klimplanten tegen de schutting.",
+  "cover": "projecten/pergola/01.jpg",
+  "alt": "Houten pergola in een tuinhoek met bankje",
+  "fotos": [
+    {
+      "foto": "projecten/pergola/01.jpg",
+      "alt": "Pergola, foto 1"
+    },
+    {
+      "foto": "projecten/pergola/02.jpg",
+      "alt": "Pergola, foto 2"
+    },
+    {
+      "foto": "projecten/pergola/03.jpg",
+      "alt": "Pergola, foto 3"
+    },
+    {
+      "foto": "projecten/pergola/04.jpg",
+      "alt": "Pergola, foto 4"
+    },
+    {
+      "foto": "projecten/pergola/05.jpg",
+      "alt": "Pergola, foto 5"
+    },
+    {
+      "foto": "projecten/pergola/06.jpg",
+      "alt": "Pergola, foto 6"
+    },
+    {
+      "foto": "projecten/pergola/07.jpg",
+      "alt": "Pergola, foto 7"
+    },
+    {
+      "foto": "projecten/pergola/08.jpg",
+      "alt": "Pergola, foto 8"
+    },
+    {
+      "foto": "projecten/pergola/09.jpg",
+      "alt": "Pergola, foto 9"
+    }
+  ]
+}

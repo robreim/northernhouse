@@ -3,15 +3,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import Photo from '../../components/Photo.astro';
-import { PROJECTEN, SITE } from '../../config';
-import { projectFotos } from '../../images';
+import { PROJECTEN, SITE, type Project } from '../../config';
 
 export function getStaticPaths() {
   return PROJECTEN.map((project) => ({ params: { slug: project.slug }, props: { project } }));
 }
 
-const { project } = Astro.props;
-const fotos = projectFotos(project.slug);
+const { project } = Astro.props as { project: Project };
 ---
 
 <BaseLayout title={`${project.label} — ${SITE.naam}`} description={project.tekst}>
@@ -24,9 +22,9 @@ const fotos = projectFotos(project.slug);
 
     <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {
-        fotos.map((f, i) => (
+        project.fotos.map((f) => (
           <li>
-            <Photo src={f} alt={`${project.label}, foto ${i + 1}`} ratio="aspect-[4/3]" />
+            <Photo src={f.foto} alt={f.alt} ratio="aspect-[4/3]" />
           </li>
         ))
       }

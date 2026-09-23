@@ -1,0 +1,238 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms/schema/sveltia-cms.json
+#
+# Beheer van de site: teksten en foto's.
+#
+# Let op bij het aanpassen: de paden `src/data/...` en `src/assets/...` moeten
+# exact kloppen met de mappen in de repo. Een nieuw project = hieronder een
+# blok `- name: <slug>` bijzetten én `src/assets/projecten/<slug>/` aanmaken.
+# Zie README, sectie "Beheer (/admin)".
+
+backend:
+  name: github
+  repo: robreim/northernhouse
+  branch: main
+  base_url: https://sveltia-cms-auth.<JOUW-SUBDOMEIN>.workers.dev
+  # Alleen inloggen via GitHub. De optie "inloggen met een toegangstoken" is
+  # voor ontwikkelaars; de beheerder hoeft die niet te zien.
+  auth_methods: [oauth]
+  commit_messages:
+    create: 'content: {{collection}} — {{path}} toegevoegd'
+    update: 'content: {{collection}} — {{path}} bijgewerkt'
+    delete: 'content: {{collection}} — {{path}} verwijderd'
+    uploadMedia: 'content: foto {{path}} toegevoegd'
+    deleteMedia: 'content: foto {{path}} verwijderd'
+
+# Opslaan = meteen publiceren. Geen concepten of pull requests: de beheerder is
+# geen ontwikkelaar. De site is binnen een minuut bijgewerkt.
+publish_mode: simple
+
+# Standaard fotomap. Elk fotoveld hieronder zet hier een projectmap overheen,
+# zodat een upload nooit in de verkeerde map belandt.
+media_folder: /src/assets
+public_folder: /src/assets
+
+# Foto's worden in de browser verkleind en omgezet naar webp voordat ze in de
+# repo belanden. Zonder dit zit de repo binnen een jaar vol met foto's van zes
+# MB per stuk.
+media_libraries:
+  all:
+    max_file_size: 25000000
+    slugify_filename: true
+    transformations:
+      raster_image:
+        format: webp
+        quality: 82
+        width: 2048
+        height: 2048
+
+collections:
+  # ---------------------------------------------------------------- pagina's
+  - name: teksten
+    label: Teksten
+    icon: edit_note
+    files:
+      - name: site
+        label: Algemeen (naam, slogan, werkgebied)
+        file: src/data/site.json
+        fields:
+          - { name: naam, label: Bedrijfsnaam, widget: string }
+          - { name: tagline, label: Slogan, widget: string }
+          - { name: beschrijving, label: Korte omschrijving voor zoekmachines, widget: text }
+          - { name: regio, label: Werkgebied, widget: string }
+
+      - name: home
+        label: Homepage
+        file: src/data/home.json
+        fields:
+          - name: hero
+            label: Bovenaan de pagina
+            widget: object
+            fields:
+              - { name: kop, label: Grote titel, widget: string }
+              - { name: intro, label: Introductietekst, widget: text }
+              - { name: knop_contact, label: Tekst op de eerste knop, widget: string }
+              - { name: knop_projecten, label: Tekst op de tweede knop, widget: string }
+              - { name: foto, label: Foto, widget: image, media_folder: /src/assets/site, choose_url: false }
+              - { name: alt, label: Omschrijving van de foto, widget: string, hint: 'Voor mensen die de foto niet kunnen zien, en voor Google.' }
+          - name: projecten
+            label: Sectie Projecten
+            widget: object
+            fields:
+              - { name: kop, label: Kop, widget: string }
+              - { name: intro, label: Introductietekst, widget: text }
+          - name: diensten
+            label: Sectie Diensten
+            widget: object
+            fields:
+              - { name: kop, label: Kop, widget: string }
+              - { name: intro, label: Introductietekst, widget: text }
+          - name: over
+            label: Sectie Over
+            widget: object
+            fields:
+              - { name: kop, label: Kop, widget: string }
+              - { name: tekst1, label: Eerste alinea, widget: text }
+              - { name: tekst2, label: Tweede alinea, widget: text }
+              - { name: knop, label: Tekst op de knop naar de Pim-pagina, widget: string }
+              - { name: foto, label: Foto, widget: image, media_folder: /src/assets/site, choose_url: false }
+              - { name: alt, label: Omschrijving van de foto, widget: string }
+          - name: contact
+            label: Sectie Contact
+            widget: object
+            fields:
+              - { name: kop, label: Kop, widget: string }
+              - { name: tekst1, label: Eerste alinea, widget: text }
+              - { name: tekst2, label: Tweede alinea, widget: text }
+
+      - name: diensten
+        label: Diensten (de vier blokken)
+        file: src/data/diensten.json
+        fields:
+          - name: teksten
+            label: Diensten
+            label_singular: Dienst
+            widget: list
+            summary: '{{fields.titel}}'
+            fields:
+              - { name: titel, label: Titel, widget: string }
+              - { name: tekst, label: Tekst, widget: text }
+              - { name: foto, label: Foto, widget: image, media_folder: /src/assets/projecten, choose_url: false, hint: 'Kies een foto uit een van de projectmappen.' }
+              - { name: alt, label: Omschrijving van de foto, widget: string }
+
+      - name: pim
+        label: Pagina Over Pim
+        file: src/data/pim.json
+        fields:
+          - name: teksten
+            label: Teksten
+            widget: object
+            fields:
+              - { name: kop, label: Titel, widget: string }
+              - { name: intro, label: Introductietekst, widget: text }
+              - { name: buiten_kop, label: Kop boven de hobby's, widget: string }
+              - { name: onderweg_kop, label: Kop boven de foto's, widget: string }
+              - { name: cta_kop, label: Kop onderaan, widget: string }
+              - { name: cta_tekst, label: Tekst onderaan, widget: text }
+              - { name: cta_contact, label: Tekst op de eerste knop, widget: string }
+              - { name: cta_projecten, label: Tekst op de tweede knop, widget: string }
+          - name: interesses
+            label: Hobby's
+            label_singular: Hobby
+            widget: list
+            summary: '{{fields.titel}}'
+            fields:
+              - { name: titel, label: Titel, widget: string }
+              - { name: tekst, label: Tekst, widget: text }
+          - name: onderweg
+            label: Foto's onderaan
+            label_singular: Foto
+            widget: list
+            fields:
+              - { name: foto, label: Foto, widget: image, media_folder: /src/assets/pim, choose_url: false }
+              - { name: alt, label: Omschrijving van de foto, widget: string }
+
+      - name: bedankt
+        label: Pagina Bedankt (na het contactformulier)
+        file: src/data/bedankt.json
+        fields:
+          - name: teksten
+            label: Teksten
+            widget: object
+            fields:
+              - { name: kop, label: Titel, widget: string }
+              - { name: tekst1, label: Eerste alinea, widget: text }
+              - { name: tekst2, label: Tweede alinea, widget: text }
+              - { name: knop, label: Tekst op de knop, widget: string }
+
+  # --------------------------------------------------------------- projecten
+  # Elk project heeft een eigen bestand en een eigen fotomap. Foto's toevoegen
+  # of weggooien doe je in het fotoblok onderaan het project.
+  - name: projecten
+    label: Projecten
+    icon: photo_library
+    files:
+      - name: project-overkapping
+        label: Overkapping
+        file: src/data/projecten/overkapping.json
+        media_folder: /src/assets/projecten/overkapping
+        fields: &projectvelden
+          - { name: slug, label: Mapnaam, widget: string, readonly: true, hint: 'Niet aanpassen; dit is de naam van de fotomap.' }
+          - { name: volgorde, label: Volgorde op de homepage, widget: number, default: 99, hint: 'Lager getal staat vooraan.' }
+          - { name: label, label: Titel, widget: string }
+          - { name: tekst, label: Korte omschrijving, widget: text }
+          - { name: cover, label: Foto op de homepage, widget: image, choose_url: false }
+          - { name: alt, label: Omschrijving van die foto, widget: string }
+          - name: fotos
+            label: Foto's van dit project
+            label_singular: Foto
+            widget: list
+            hint: 'Sleep om de volgorde te veranderen. Het prullenbakje haalt een foto van de site én uit de map.'
+            fields:
+              - { name: foto, label: Foto, widget: image, choose_url: false }
+              - { name: alt, label: Omschrijving, widget: string }
+
+      - name: project-pergola
+        label: Pergola
+        file: src/data/projecten/pergola.json
+        media_folder: /src/assets/projecten/pergola
+        fields: *projectvelden
+
+      - name: project-schutting
+        label: Schutting en poort
+        file: src/data/projecten/schutting.json
+        media_folder: /src/assets/projecten/schutting
+        fields: *projectvelden
+
+      - name: project-vensterluik
+        label: Raamluiken
+        file: src/data/projecten/vensterluik.json
+        media_folder: /src/assets/projecten/vensterluik
+        fields: *projectvelden
+
+      - name: project-houtrotreparatie
+        label: Houtrotreparatie
+        file: src/data/projecten/houtrotreparatie.json
+        media_folder: /src/assets/projecten/houtrotreparatie
+        fields: *projectvelden
+
+      - name: project-dakschoorreparatie
+        label: Dakschoorreparatie
+        file: src/data/projecten/dakschoorreparatie.json
+        media_folder: /src/assets/projecten/dakschoorreparatie
+        fields: *projectvelden
+
+  # Losse fotomappen om in op te ruimen (bekijken, toevoegen, weggooien)
+  # zonder een projecttekst te openen.
+asset_collections:
+  - name: projectfotos
+    label: Alle projectfoto's
+    icon: image
+    media_folder: /src/assets/projecten
+  - name: sitefotos
+    label: Algemene foto's
+    icon: image
+    media_folder: /src/assets/site
+  - name: pimfotos
+    label: Foto's Over Pim
+    icon: image
+    media_folder: /src/assets/pim
