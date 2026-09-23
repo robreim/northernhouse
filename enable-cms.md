@@ -1,79 +1,79 @@
-# Het beheerformulier aanzetten (`/admin`)
+# Enabling the CMS (`/admin`)
 
-Eenmalige opzet, ongeveer een kwartier. Daarna kan de beheerder van de site via
-**https://northernhouse.nl/admin** teksten wijzigen en foto's toevoegen en
-weghalen, zonder ontwikkelaar.
+One-time setup, about fifteen minutes. After this, the site's editor can change
+text and add or remove photos at **https://northernhouse.nl/admin**, without a
+developer.
 
-Zonder deze stappen is `/admin` wel bereikbaar, maar werkt de knop *Inloggen met
-GitHub* niet: GitHub staat geen login toe vanuit een statische pagina. Daarvoor
-is een klein tussenstukje nodig (een Cloudflare Worker).
+Without these steps `/admin` loads, but the *Sign in with GitHub* button will not
+work: GitHub refuses to allow login from a static page. That needs a small
+in-between service (a Cloudflare Worker).
 
-Nodig: een gratis Cloudflare-account en toegang tot de GitHub-repo.
+You need: a free Cloudflare account and access to the GitHub repo.
 
-## 1. De OAuth-worker deployen
+## 1. Deploy the OAuth worker
 
-1. Ga naar **https://github.com/sveltia/sveltia-cms-auth**
-2. Klik op **Deploy to Cloudflare Workers**
-3. Doorloop de stappen; Cloudflare maakt de worker aan
+1. Go to **https://github.com/sveltia/sveltia-cms-auth**
+2. Click **Deploy to Cloudflare Workers**
+3. Follow the steps; Cloudflare creates the worker
 
-Alternatief via de terminal: de repo clonen en `wrangler deploy`.
+Alternative from the terminal: clone the repo and run `wrangler deploy`.
 
-Open daarna in Cloudflare het dashboard → **Workers & Pages** → `sveltia-cms-auth`.
-De URL staat bovenaan en ziet er zo uit:
+Then open the Cloudflare dashboard → **Workers & Pages** → `sveltia-cms-auth`.
+The URL is at the top and looks like this:
 
 ```
-https://sveltia-cms-auth.jouwnaam.workers.dev
+https://sveltia-cms-auth.yourname.workers.dev
 ```
 
-Bewaar die URL; hij is in stap 3 en 4 nodig.
+Keep that URL; you need it in steps 3 and 4.
 
-## 2. Een GitHub OAuth-app registreren
+## 2. Register a GitHub OAuth app
 
-Ga naar **https://github.com/settings/applications/new** en vul in:
+Go to **https://github.com/settings/applications/new** and fill in:
 
-| Veld | Waarde |
+| Field | Value |
 | --- | --- |
 | Application name | `Sveltia CMS Authenticator` |
 | Homepage URL | `https://northernhouse.nl` |
 | Authorization callback URL | `<worker-url>/callback` |
 
-De callback is de worker-URL **plus `/callback`**, bijvoorbeeld
-`https://sveltia-cms-auth.jouwnaam.workers.dev/callback`. Let op: zonder
-`/callback` geeft GitHub later `redirect_uri_mismatch`.
+The callback is the worker URL **plus `/callback`**, for example
+`https://sveltia-cms-auth.yourname.workers.dev/callback`. Note: without
+`/callback`, GitHub later reports `redirect_uri_mismatch`.
 
-Klik op **Register application** en daarna op **Generate a new client secret**.
-Je hebt nu een **Client ID** en een **Client Secret** nodig voor de volgende stap.
+Click **Register application**, then **Generate a new client secret**. You now
+have a **Client ID** and a **Client Secret** for the next step.
 
-## 3. De worker instellen
+## 3. Configure the worker
 
-Cloudflare → de worker → **Settings** → **Variables and Secrets**:
+Cloudflare → the worker → **Settings** → **Variables and Secrets**:
 
-| Naam | Waarde | Let op |
+| Name | Value | Note |
 | --- | --- | --- |
-| `GITHUB_CLIENT_ID` | uit stap 2 | |
-| `GITHUB_CLIENT_SECRET` | uit stap 2 | op **Encrypt** klikken |
-| `ALLOWED_DOMAINS` | `northernhouse.nl, *.northernhouse.nl` | zie hieronder |
+| `GITHUB_CLIENT_ID` | from step 2 | |
+| `GITHUB_CLIENT_SECRET` | from step 2 | click **Encrypt** |
+| `ALLOWED_DOMAINS` | `northernhouse.nl, *.northernhouse.nl` | see below |
 
-`ALLOWED_DOMAINS` is technisch optioneel, maar **niet overslaan**: het voorkomt
-dat een andere site jouw worker als gratis GitHub-login gebruikt, en dat iemand
-via die weg een toegangstoken krijgt. Meerdere waarden mogen, gescheiden door
-komma's; `*.` dekt ook `www`.
+`ALLOWED_DOMAINS` is technically optional but **don't skip it**: it stops another
+site from using your worker as a free GitHub login, and stops anyone obtaining a
+token through it. Multiple values are allowed, comma-separated; `*.` also covers
+`www`.
 
-Daarna de worker opslaan/deployen.
+Then save/deploy the worker.
 
-## 4. Het formulier naar de worker laten wijzen
+## 4. Point the form at the worker
 
-In `public/admin/config.yml`, bij `backend` (regel 14) staat nog een
-placeholder. Vervang die door de worker-URL:
+In `public/admin/config.yml`, under `backend` (line 14), there is still a
+placeholder. Replace it with the worker URL:
 
 ```yaml
 backend:
   name: github
   repo: robreim/northernhouse
-  base_url: https://sveltia-cms-auth.jouwnaam.workers.dev
+  base_url: https://sveltia-cms-auth.yourname.workers.dev
 ```
 
-Committen en pushen:
+Commit and push:
 
 ```bash
 git add public/admin/config.yml
@@ -81,95 +81,95 @@ git commit -m "chore: point the CMS at the OAuth worker"
 git push
 ```
 
-Na de deploy (ongeveer een minuut) is `/admin` bruikbaar.
+After the deploy (about a minute) `/admin` is usable.
 
-## 5. De beheerder toegang geven
+## 5. Give the editor access
 
-De beheerder heeft een **GitHub-account met schrijftoegang** tot
-`robreim/northernhouse` nodig:
+The editor needs a **GitHub account with write access** to
+`robreim/northernhouse`:
 
-Repo → **Settings** → **Collaborators** → **Add people** → gebruikersnaam, rol
+Repo → **Settings** → **Collaborators** → **Add people** → username, role
 **Write**.
 
-Let op: bij een publieke repo geeft Write ook toegang tot de code, niet alleen
-tot de inhoud. Het formulier zelf toont alleen tekst- en fotovelden, maar via
-GitHub kan deze persoon meer. Is dat niet gewenst, dan zijn de opties: de repo
-privé maken (GitHub Pages vereist dan een betaald plan) of accepteren.
+Note: on a public repo, Write also grants access to the code, not just the
+content. The form itself only shows text and photo fields, but through GitHub
+this person can do more. If that is not acceptable, the options are: make the
+repo private (GitHub Pages then requires a paid plan) or accept it.
 
-## 6. Testen
+## 6. Test it
 
-1. Ga naar **https://northernhouse.nl/admin/**
-2. **Inloggen met GitHub** → goedkeuren
-3. Open een project, wijzig een woord, klik **Opslaan**
-4. Kijk in de repo bij **Actions**: er start meteen een deploy. Na ongeveer
-   een minuut staat de wijziging online
-5. Test daarna een foto: voeg er een toe, controleer of hij in de juiste map
-   `src/assets/projecten/<project>/` belandt, en of hij op de site staat
+1. Go to **https://northernhouse.nl/admin/**
+2. **Sign in with GitHub** → approve
+3. Open a project, change a word, click **Save**
+4. Check the repo's **Actions** tab: a deploy starts immediately. The change is
+   live after about a minute
+5. Then test a photo: upload one, check it lands in the right
+   `src/assets/projecten/<project>/` folder, and that it appears on the site
 
-## Eerst zelf droog oefenen (aanbevolen)
+## Do a dry run yourself first (recommended)
 
-Test het formulier één keer lokaal, dan raak je de live site niet:
+Test the form once locally, so you don't touch the live site:
 
 ```bash
 npm run dev
 ```
 
-Open **http://localhost:4321/admin/index.html** in Chrome (of Edge/Brave) →
-**Werken met een lokale repository** → kies de projectmap → pas iets aan.
-Bekijk daarna `git diff` en gooi de wijziging weg met `git checkout .`
+Open **http://localhost:4321/admin/index.html** in Chrome (or Edge/Brave) →
+**Work with Local Repository** → select the project folder → make a change.
+Then look at `git diff` and discard the change with `git checkout .`
 
-Dit werkt alleen in Chromium-browsers (Chrome, Edge, Brave); Firefox en Safari
-ondersteunen de benodigde bestandstoegang niet.
+This only works in Chromium browsers (Chrome, Edge, Brave); Firefox and Safari
+do not support the required file access.
 
-## Wat de beheerder wel en niet kan
+## What the editor can and cannot do
 
-Wel: alle teksten, foto's toevoegen en weghalen, de volgorde van foto's en van
-projecten op de homepage.
+Can: all text, add and remove photos, the order of photos and of the projects on
+the homepage.
 
-Niet: de opbouw van de pagina's, de vormgeving, de navigatie. Die staan in de
-Astro-code. Er is dus geen knop die de site kan slopen.
+Cannot: page structure, styling, navigation. Those live in the Astro code. There
+is deliberately no button that can break the site.
 
-Een nieuw project toevoegen blijft handwerk voor de websitebouwer; zie de README,
-sectie *Beheer (/admin) → Een nieuw project toevoegen*.
+Adding a whole new project stays manual work for the site builder; see the
+README, section *Beheer (/admin) → Een nieuw project toevoegen*.
 
-## Als er iets misgaat
+## When something goes wrong
 
-| Klacht | Oorzaak |
+| Symptom | Cause |
 | --- | --- |
-| Inlogknop doet niets, of fout na goedkeuren | `base_url` komt niet exact overeen met de worker-URL, of `/callback` ontbreekt in de GitHub-app |
-| GitHub meldt `redirect_uri_mismatch` | De callback-URL in de GitHub-app is niet `<worker-url>/callback` |
-| `/admin` geeft een lege pagina of 404 | De map `public/admin/` zat niet in de deploy; kijk in de Actions-log of `dist/admin/` bestaat |
-| Opslaan lukt, maar de site verandert niet | De build is mislukt. Kijk bij **Actions**; draai `npm run check-content` voor de reden |
-| Beheerder ziet geen projecten | Geen Write-toegang op de repo (stap 5) |
+| Sign-in button does nothing, or an error after approving | `base_url` does not match the worker URL exactly, or `/callback` is missing from the GitHub app |
+| GitHub reports `redirect_uri_mismatch` | The callback URL in the GitHub app is not `<worker-url>/callback` |
+| `/admin` shows a blank page or 404 | `public/admin/` was not in the deploy; check the Actions log for `dist/admin/` |
+| Saving works but the site does not change | The build failed. Check **Actions**; run `npm run check-content` for the reason |
+| Editor can sign in but sees no projects | No Write access to the repo (step 5) |
 
-Een mislukte build laat de vorige versie van de site staan: de wijziging komt
-dan niet online, maar er breekt ook niets. Alles staat in git, dus een verkeerde
-wijziging is terug te draaien met `git revert <commit>`.
+A failed build leaves the previous version of the site in place: the change does
+not go live, but nothing breaks either. Everything is in git, so a bad change can
+be undone with `git revert <commit>`.
 
-## Beveiliging, kort
+## Security, briefly
 
-- `/admin` is openbaar op te vragen. Er staat niets geheims in: alleen de
-  repo-naam en veldnamen. Zonder GitHub-account met schrijftoegang kom je niet
-  verder dan het inlogscherm.
-- De pagina staat op `noindex` en `/admin/` staat in `robots.txt`.
-- De CMS-configuratie is per definitie publiek; zet er nooit sleutels in. De
-  Web3Forms-key staat daarom in `src/config.ts` en niet hier.
-- De Cloudflare Worker is het enige onderdeel dat geheimen bevat
-  (`GITHUB_CLIENT_SECRET`), en die staat versleuteld in Cloudflare.
+- `/admin` is publicly reachable. There is nothing secret in it: only the repo
+  name and field names. Without a GitHub account that has write access you get no
+  further than the login screen.
+- The page is `noindex` and `/admin/` is in `robots.txt`.
+- The CMS configuration is public by definition; never put keys in it. The
+  Web3Forms key therefore lives in `src/config.ts`, not here.
+- The Cloudflare Worker is the only component holding secrets
+  (`GITHUB_CLIENT_SECRET`), and that one is encrypted in Cloudflare.
 
-## Technisch, voor de websitebouwer
+## Technical notes for the site builder
 
-- Het formulier is **Sveltia CMS** (MIT, één JavaScript-bestand via unpkg). Het
-  is geen dependency in `package.json` en er is geen server of database.
-- Opslaan = een commit naar `main` = een nieuwe deploy via GitHub Actions.
-  `publish_mode: simple`, dus geen concepten of pull requests.
-- Bij het uploaden verkleint het formulier foto's in de browser, zet ze om naar
-  webp (kwaliteit 82, max 2048 px) en slaat ze op in de map van dat project.
-  Zonder dat loopt de repo vol met telefoonfoto's van enkele MB's per stuk.
-- Bij het laden van `/admin` controleert Sveltia de configuratie tegen zijn eigen
-  JSON-schema en meldt fouten in de browserconsole. Zet in VS Code de
-  YAML-extensie aan; dan zie je die fouten al bij het typen (via de
-  `$schema`-regel bovenaan `config.yml`).
-- Vóór elke build draait `scripts/check-content.mjs`. Dat controleert of de
-  databestanden, de foto's en de CMS-configuratie bij elkaar passen en stopt de
-  build met een leesbare melding als er iets ontbreekt.
+- The form is **Sveltia CMS** (MIT, a single JavaScript file from unpkg). It is
+  not a dependency in `package.json`, and there is no server or database.
+- Saving = a commit to `main` = a new deploy via GitHub Actions.
+  `publish_mode: simple`, so no drafts or pull requests.
+- On upload the form resizes photos in the browser, converts them to webp
+  (quality 82, max 2048 px) and stores them in that project's folder. Without
+  that the repo fills up with phone photos of several MB each.
+- When `/admin` loads, Sveltia validates the configuration against its own JSON
+  schema and reports problems in the browser console. Enable the YAML extension
+  in VS Code and you see those problems while typing (via the `$schema` line at
+  the top of `config.yml`).
+- Before every build, `scripts/check-content.mjs` runs. It checks that the data
+  files, the photos and the CMS configuration match, and stops the build with a
+  readable message if something is missing.
