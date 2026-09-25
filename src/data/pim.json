@@ -9,24 +9,10 @@
     "cta_contact": "Neem contact op",
     "cta_projecten": "Bekijk projecten"
   },
-  "onderweg": [
-    {
-      "foto": "pim/terreinrijden-1.jpg",
-      "alt": "Zandpad door het bos, gezien vanuit de terreinauto"
-    },
-    {
-      "foto": "pim/terreinrijden-2.jpg",
-      "alt": "Terreinauto in een houten schuur"
-    },
-    {
-      "foto": "pim/terreinrijden-3.jpg",
-      "alt": "Bospad met een andere terreinauto voor de auto"
-    }
-  ],
   "interesses": [
     {
-      "titel": "Terreinrijden",
-      "tekst": "Met een oude terreinauto over zandpaden en door het bos."
+      "titel": "4x4 reizen",
+      "tekst": "Reizen maken met een klassieke 4x4"
     },
     {
       "titel": "Vissen",
@@ -39,6 +25,20 @@
     {
       "titel": "Buiten zijn",
       "tekst": "Hout begint in de natuur; daar komt de rust en de inspiratie vandaan."
+    }
+  ],
+  "onderweg": [
+    {
+      "foto": "pim/terreinrijden-1.jpg",
+      "alt": "Zandpad door het bos, gezien vanuit de terreinauto"
+    },
+    {
+      "foto": "pim/terreinrijden-2.jpg",
+      "alt": "Terreinauto in een houten schuur"
+    },
+    {
+      "foto": "pim/terreinrijden-3.jpg",
+      "alt": "Bospad met een andere terreinauto voor de auto"
     }
   ]
 }
